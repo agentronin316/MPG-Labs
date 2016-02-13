@@ -18,8 +18,8 @@ namespace MPGLabs
         public float W { get; private set; }
         
         //Precalculate conversion values
-        const float DEG_TO_RAD = (float)(180 / Math.PI);
-        const float RAD_TO_DEG = (float)(Math.PI / 180);
+        const float DEG_TO_RAD = (float)(Math.PI / 180);
+        const float RAD_TO_DEG = (float)(180 / Math.PI);
 
         //public static methods
         public static float Deg2Rad(float degrees)
@@ -46,7 +46,7 @@ namespace MPGLabs
         /// <param name="x"></param>
         /// <param name="y"></param>
         /// <param name="z">skip for 2D</param>
-        void SetRectGivenRect(float x, float y, float z = 0)
+        public void SetRectGivenRect(float x, float y, float z = 0)
         {
             X = x;
             Y = y;
@@ -60,14 +60,14 @@ namespace MPGLabs
         /// <param name="magnitude"></param>
         /// <param name="heading">in degrees, angle of vector in xy-plane</param>
         /// <param name="pitch">between -90 and 90, in degrees, angle of vector from xy-plane; skip for 2D</param>
-        void SetRectGivenMagHeadPitch(float magnitude, float heading, float pitch = 0)
+        public void SetRectGivenMagHeadPitch(float magnitude, float heading, float pitch = 0)
         { 
             if (magnitude == 0)
             {
                 //set x, y, z to 0, 0, 0
                 X = Y = Z = 0;
             }
-            else if (pitch == 90 || pitch == -90)
+            else if (pitch == 90 || pitch == -90) // straight up or straight down
             {
                 X = 0;
                 Y = 0;
@@ -107,7 +107,7 @@ namespace MPGLabs
         /// <returns>a string containing the magnitude, heading, and pitch of the vector with angles in degrees</returns>
         public string PrintMagHeadPitch()
         {
-            return String.Format("{0:N2} at heading {1:N2} and pitch {2:N2}", GetMagnitude(), GetHeading(), GetPitch());
+            return String.Format("{0:N2} at heading {1:N2} deg and pitch {2:N2} deg", GetMagnitude(), GetHeading(), GetPitch());
         }
 
         /// <summary>
@@ -116,7 +116,7 @@ namespace MPGLabs
         /// <returns>a string containing all three Euler Angles of the vector in degrees</returns>
         public string PrintEulerAngles()
         {
-            return String.Format("alpha = {0:N2}; beta = {1:N2}; gamma = {2:N2}", GetAlpha(), GetBeta(), GetGamma());
+            return String.Format("alpha = {0:N2} deg; beta = {1:N2} deg; gamma = {2:N2} deg", GetAlpha(), GetBeta(), GetGamma());
         }
 
         /// <summary>
@@ -181,7 +181,7 @@ namespace MPGLabs
         /// <returns>The pitch of the vector in degrees</returns>
         public float GetPitch()
         {
-            return Rad2Deg((float)Math.Asin(Z));
+            return Rad2Deg((float)(Math.Asin(Z / GetMagnitude())));
         }
 
         /// <summary>
@@ -210,7 +210,5 @@ namespace MPGLabs
         {
             return Rad2Deg((float)(Math.Acos(Z / GetMagnitude())));
         }
-
-
     }
 }
