@@ -292,7 +292,7 @@ namespace MPGLabs
         /// <returns></returns>
         public static float operator &(Vector3D u, Vector3D v)
         {
-            return (float)(Math.Acos((u * v) / (u.GetMagnitude() * v.GetMagnitude()))));
+            return (float)(Math.Acos((u * v) / (u.GetMagnitude() * v.GetMagnitude())));
         }
 
         /// <summary>
