@@ -14,7 +14,8 @@ namespace MPGLabs
                 Console.WriteLine("[2]: Polar 2D vector input");
                 Console.WriteLine("[3]: Rectangular 3D vector input");
                 Console.WriteLine("[4]: Magnitude, Heading, Pitch 3D vector input");
-                Console.WriteLine("[5]: Quit");
+                Console.WriteLine("[5]: Parallel Projection of a vector onto a second");
+                Console.WriteLine("[6]: Quit");
                 Console.Write("Input your selection: ");
                 menuChoice = Console.ReadLine();
 
@@ -33,13 +34,41 @@ namespace MPGLabs
                         MagHeadPitch();
                         break;
                     case "5":
+                        ParallelProjection();
+                        break;
+                    case "6":
                         Console.WriteLine("Goodbye.");
                         break;
                 }
                 Console.Write("Press any key to continue...");
                 Console.ReadKey();
                 Console.Clear();
-            } while (menuChoice != "5");
+            } while (menuChoice != "6");
+        }
+
+        private static void ParallelProjection()
+        {
+            Vector3D vectorOne = new Vector3D();
+            Vector3D vectorTwo = new Vector3D();
+            Console.Write("Input the x coordinate for the first vector: ");
+            float x = Convert.ToSingle(Console.ReadLine());
+            Console.Write("Input the y coordinate for the first vector: ");
+            float y = Convert.ToSingle(Console.ReadLine());
+            Console.Write("Input the z coordinate for the first vector: ");
+            float z = Convert.ToSingle(Console.ReadLine());
+            vectorOne.SetRectGivenRect(x, y, z);
+            Console.Write("Input the x coordinate for the second vector: ");
+            x = Convert.ToSingle(Console.ReadLine());
+            Console.Write("Input the y coordinate for the second vector: ");
+            y = Convert.ToSingle(Console.ReadLine());
+            Console.Write("Input the z coordinate for the second vector: ");
+            z = Convert.ToSingle(Console.ReadLine());
+            vectorTwo.SetRectGivenRect(x, y, z);
+
+            vectorOne = vectorOne | vectorTwo;
+
+            Console.WriteLine(vectorOne.PrintRect());
+
         }
 
         static void Rect2D()
