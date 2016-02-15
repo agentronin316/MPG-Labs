@@ -206,5 +206,115 @@ namespace MPGLabs
         {
             return Rad2Deg((float)(Math.Acos(Z / GetMagnitude())));
         }
+
+
+        /// <summary>
+        /// Addition of two vectors
+        /// </summary>
+        /// <param name="u"></param>
+        /// <param name="v"></param>
+        /// <returns></returns>
+        public static Vector3D operator + (Vector3D u, Vector3D v)
+        {
+            Vector3D toReturn = new Vector3D();
+            toReturn.SetRectGivenRect(u.X + v.X, u.Y + v.Y, u.Z + v.Z);
+            return toReturn;
+        }
+
+        /// <summary>
+        /// Subtraction of two vectors
+        /// </summary>
+        /// <param name="u"></param>
+        /// <param name="v"></param>
+        /// <returns></returns>
+        public static Vector3D operator - (Vector3D u, Vector3D v)
+        {
+            Vector3D toReturn = new Vector3D();
+            toReturn.SetRectGivenRect(u.X - v.X, u.Y - v.Y, u.Z - v.Z);
+            return toReturn;
+        }
+
+        /// <summary>
+        /// Scalar Multiplication
+        /// </summary>
+        /// <param name="a"></param>
+        /// <param name="v"></param>
+        /// <returns></returns>
+        public static Vector3D operator &(float a, Vector3D v)
+        {
+            Vector3D toReturn = new Vector3D();
+            toReturn.SetRectGivenRect(a * v.X, a * v.Y, a * v.Z);
+            return toReturn;
+        }
+
+        /// <summary>
+        /// Scalar Multiplication
+        /// </summary>
+        /// <param name="v"></param>
+        /// <param name="a"></param>
+        /// <returns></returns>
+        public static Vector3D operator &(Vector3D v, float a)
+        {
+            Vector3D toReturn = new Vector3D();
+            toReturn.SetRectGivenRect(a * v.X, a * v.Y, a * v.Z);
+            return toReturn;
+        }
+
+        /// <summary>
+        /// Vector Normalization
+        /// </summary>
+        /// <param name="v"></param>
+        /// <returns></returns>
+        public static Vector3D operator !(Vector3D v)
+        {
+            Vector3D toReturn = new Vector3D();
+            toReturn.SetRectGivenRect(v.X / v.GetMagnitude(), v.Y / v.GetMagnitude(), v.Z / v.GetMagnitude());
+            return toReturn;
+        }
+
+
+        /// <summary>
+        /// Dot product of two vectors
+        /// </summary>
+        /// <param name="u"></param>
+        /// <param name="v"></param>
+        /// <returns></returns>
+        public static float operator *(Vector3D u, Vector3D v)
+        {
+            return (u.X * v.X + u.Y * v.Y + u.Z * v.Z);
+        }
+
+        /// <summary>
+        /// Angle between two vectors
+        /// </summary>
+        /// <param name="u"></param>
+        /// <param name="v"></param>
+        /// <returns></returns>
+        public static float operator &(Vector3D u, Vector3D v)
+        {
+            return (float)(Math.Acos((u * v) / (u.GetMagnitude() * v.GetMagnitude()))));
+        }
+
+        /// <summary>
+        /// Parallel Projection of u onto v
+        /// </summary>
+        /// <param name="u"></param>
+        /// <param name="v"></param>
+        /// <returns></returns>
+        public static Vector3D operator |(Vector3D u, Vector3D v)
+        {
+            return ((u * v) / (v.GetMagnitude() * v.GetMagnitude())) & v;
+        }
+
+        /// <summary>
+        /// Perpendicular Projection of u onto v
+        /// </summary>
+        /// <param name="u"></param>
+        /// <param name="v"></param>
+        /// <returns></returns>
+        public static Vector3D operator ^(Vector3D u, Vector3D v)
+        {
+            return ((u | v) - u);
+        }
     }
 }
