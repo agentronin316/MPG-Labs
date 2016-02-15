@@ -36,6 +36,14 @@ namespace MPGLabs
             W = 1;
         }
 
+        public Vector3D(float x, float y, float z = 0)
+        {
+            X = x;
+            Y = y;
+            Z = z;
+            W = 1;
+        }
+
         /// <summary>
         /// Assigns the properties of the vector given rectangular coordinates
         /// </summary>
@@ -240,7 +248,7 @@ namespace MPGLabs
         /// <param name="a"></param>
         /// <param name="v"></param>
         /// <returns></returns>
-        public static Vector3D operator &(float a, Vector3D v)
+        public static Vector3D operator *(float a, Vector3D v)
         {
             Vector3D toReturn = new Vector3D();
             toReturn.SetRectGivenRect(a * v.X, a * v.Y, a * v.Z);
@@ -253,7 +261,7 @@ namespace MPGLabs
         /// <param name="v"></param>
         /// <param name="a"></param>
         /// <returns></returns>
-        public static Vector3D operator &(Vector3D v, float a)
+        public static Vector3D operator *(Vector3D v, float a)
         {
             Vector3D toReturn = new Vector3D();
             toReturn.SetRectGivenRect(a * v.X, a * v.Y, a * v.Z);
@@ -303,7 +311,7 @@ namespace MPGLabs
         /// <returns></returns>
         public static Vector3D operator |(Vector3D u, Vector3D v)
         {
-            return ((u * v) / (v.GetMagnitude() * v.GetMagnitude())) & v;
+            return ((u * v) / (v.GetMagnitude() * v.GetMagnitude())) * v;
         }
 
         /// <summary>

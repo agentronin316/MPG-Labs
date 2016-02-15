@@ -9,6 +9,78 @@ namespace MPGLabs
             string menuChoice;
             do
             {
+                Console.Clear();
+                Console.WriteLine("Menu:");
+                Console.WriteLine("[1]: Vector3D Lab");
+                Console.WriteLine("[2]: Projections Lab");
+                Console.WriteLine("[3]: ...");
+                Console.WriteLine("[4]: ...");
+                Console.WriteLine("[5]: ...");
+                Console.WriteLine("[6]: Quit");
+                Console.Write("Input your selection: ");
+                menuChoice = Console.ReadLine();
+
+                switch (menuChoice)
+                {
+                    case "1":
+                        VectorLab();
+                        break;
+                    case "2":
+                        ProjectionLab();
+                        break;
+                    case "3":
+                        Console.WriteLine("Not yet implemented.");
+                        break;
+                    case "4":
+                        Console.WriteLine("Not yet implemented.");
+                        break;
+                    case "5":
+                        Console.WriteLine("Not yet implemented.");
+                        break;
+                    case "6":
+                        Console.WriteLine("Goodbye.");
+                        break;
+                }
+                Console.Write("Press any key to continue...");
+                Console.ReadKey();
+            } while (menuChoice != "6");
+        }
+
+        static void ProjectionLab()
+        {
+            Console.Write("Input length of the utility pole in furlongs: ");
+            float magnitude = Convert.ToSingle(Console.ReadLine());
+            Console.Write("Input heading of the utility pole in degrees: ");
+            float heading = Convert.ToSingle(Console.ReadLine());
+            Console.Write("Input pitch of the utility pole in degrees: ");
+            float pitch = Convert.ToSingle(Console.ReadLine());
+            Vector3D pole = new Vector3D();
+            Vector3D bee = new Vector3D();
+            pole.SetRectGivenMagHeadPitch(magnitude, heading, pitch);
+            for (int i = 0; i < 3; i++)
+            {
+                Console.Write("Input distance the bee traveled in furlongs: ");
+                magnitude = Convert.ToSingle(Console.ReadLine());
+                Console.Write("Input the bee's heading in degrees: ");
+                heading = Convert.ToSingle(Console.ReadLine());
+                Console.Write("Input the bee's pitch in degrees: ");
+                pitch = Convert.ToSingle(Console.ReadLine());
+                Vector3D move = new Vector3D();
+                move.SetRectGivenMagHeadPitch(magnitude, heading, pitch);
+                bee += move;
+                Console.WriteLine("bee has moved (in furlongs:) " + bee.PrintMagHeadPitch());
+                Console.WriteLine("closest point on the pole is " + (bee | pole).PrintMagHeadPitch());
+            }
+            Console.WriteLine("bee needs to move ");
+        }
+
+
+        static void VectorLab()
+        {
+            string menuChoice;
+            do
+            {
+                Console.Clear();
                 Console.WriteLine("Menu:");
                 Console.WriteLine("[1]: Rectangular 2D vector input");
                 Console.WriteLine("[2]: Polar 2D vector input");
@@ -42,7 +114,6 @@ namespace MPGLabs
                 }
                 Console.Write("Press any key to continue...");
                 Console.ReadKey();
-                Console.Clear();
             } while (menuChoice != "6");
         }
 
