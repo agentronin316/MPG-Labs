@@ -177,7 +177,7 @@ namespace MPGLabs
         /// <returns>The pitch of the vector in degrees</returns>
         public float GetPitch()
         {
-            return Rad2Deg((float)(Math.Asin(Z / GetMagnitude())));
+            return GetMagnitude() == 0 ? 0f : Rad2Deg((float)(Math.Asin(Z / GetMagnitude())));
         }
 
         /// <summary>
@@ -186,7 +186,7 @@ namespace MPGLabs
         /// <returns>Alpha Euler Angle in degrees</returns>
         public float GetAlpha() 
         {
-            return Rad2Deg((float)(Math.Acos(X / GetMagnitude())));
+            return GetMagnitude() == 0 ? 0f : Rad2Deg((float)(Math.Acos(X / GetMagnitude())));
         }
 
         /// <summary>
@@ -195,7 +195,7 @@ namespace MPGLabs
         /// <returns>Beta Euler Angle in degrees</returns>
         public float GetBeta()
         {
-            return Rad2Deg((float)(Math.Acos(Y / GetMagnitude())));
+            return GetMagnitude() == 0 ? 0f : Rad2Deg((float)(Math.Acos(Y / GetMagnitude())));
         }
 
         /// <summary>
@@ -204,7 +204,7 @@ namespace MPGLabs
         /// <returns>Gamma Euler Angle in degrees</returns>
         public float GetGamma()
         {
-            return Rad2Deg((float)(Math.Acos(Z / GetMagnitude())));
+            return GetMagnitude() == 0 ? 0f : Rad2Deg((float)(Math.Acos(Z / GetMagnitude())));
         }
 
 
