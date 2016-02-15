@@ -81,7 +81,7 @@ namespace MPGLabs
         static void Polar()
         {
             Vector3D vector = new Vector3D();
-            Console.Write("Input the magnitude of the vector in degrees: ");
+            Console.Write("Input the magnitude of the vector: ");
             float mag = Convert.ToSingle(Console.ReadLine());
             Console.Write("Input the angle of the vector in degrees: ");
             float angle = Convert.ToSingle(Console.ReadLine());
