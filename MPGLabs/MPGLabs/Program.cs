@@ -48,33 +48,38 @@ namespace MPGLabs
 
         static void ProjectionLab()
         {
+            //Declare vectors for tracking the end of the pole and the bee
+            Vector3D pole = new Vector3D();
+            Vector3D bee = new Vector3D();
+
+            //Collect user input about the pole
             Console.Write("Input length of the utility pole in furlongs: ");
-            float magnitude = Convert.ToSingle(Console.ReadLine());
+            float magnitude = Convert.ToSingle(Console.ReadLine()); //In furlongs, because I can
             Console.Write("Input heading of the utility pole in degrees: ");
             float heading = Convert.ToSingle(Console.ReadLine());
             Console.Write("Input pitch of the utility pole in degrees: ");
             float pitch = Convert.ToSingle(Console.ReadLine());
-            Vector3D pole = new Vector3D();
-            Vector3D bee = new Vector3D();
+
             pole.SetRectGivenMagHeadPitch(magnitude, heading, pitch);
             for (int i = 0; i < 3; i++)
             {
+                //Collect user data input about the movement
                 Console.Write("Input distance the bee traveled in furlongs: ");
-                magnitude = Convert.ToSingle(Console.ReadLine());
+                magnitude = Convert.ToSingle(Console.ReadLine()); //In furlongs again, because consistency is nice
                 Console.Write("Input the bee's heading in degrees: ");
                 heading = Convert.ToSingle(Console.ReadLine());
                 Console.Write("Input the bee's pitch in degrees: ");
                 pitch = Convert.ToSingle(Console.ReadLine());
                 Vector3D move = new Vector3D();
                 move.SetRectGivenMagHeadPitch(magnitude, heading, pitch);
-                bee += move;
-                Console.WriteLine("bee has moved (in furlongs:) " + bee.PrintMagHeadPitch());
-                Console.WriteLine("closest point on the pole is " + (bee | pole).PrintMagHeadPitch());
+                bee += move; //update the bee's position
+                Console.WriteLine("bee has moved " + bee.PrintMagHeadPitch("furlongs"));
+                Console.WriteLine("closest point on the pole is " + (bee | pole).PrintMagHeadPitch("furlongs"));
             }
-            Console.WriteLine("bee needs to move ");
+            Console.WriteLine("bee needs to move " + (bee - pole).PrintMagHeadPitch("furlongs") + " to reach the end of the pole");
         }
 
-
+        #region Vector Lab
         static void VectorLab()
         {
             string menuChoice;
@@ -107,9 +112,6 @@ namespace MPGLabs
                         break;
                     case "5":
                         ParallelProjection();
-                        break;
-                    case "6":
-                        Console.WriteLine("Goodbye.");
                         break;
                 }
                 Console.Write("Press any key to continue...");
@@ -205,5 +207,6 @@ namespace MPGLabs
             Console.WriteLine(vector.PrintMagHeadPitch());
             Console.WriteLine(vector.PrintEulerAngles());
         }
+        #endregion
     }
 }

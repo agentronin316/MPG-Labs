@@ -102,16 +102,24 @@ namespace MPGLabs
         /// <returns>a string representing the rectangular coordinates of the vector</returns>
         public string PrintRect()
         {
-            return String.Format("<{0:N2}, {1:N2}, {2:N2}>", X, Y, Z);
+            return string.Format("<{0:N2}, {1:N2}, {2:N2}>", X, Y, Z);
         }
 
         /// <summary>
-        /// string will be formatted: "0.00 at heading 0.00 and pitch 0.00"
+        /// string will be formatted: "0.00 {units} at heading 0.00 and pitch 0.00"
         /// </summary>
+        /// <param name="units">The units to be displayed with the output</param>
         /// <returns>a string containing the magnitude, heading, and pitch of the vector with angles in degrees</returns>
-        public string PrintMagHeadPitch()
+        public string PrintMagHeadPitch(string units = "")
         {
-            return String.Format("{0:N2} at heading {1:N2} deg and pitch {2:N2} deg", GetMagnitude(), GetHeading(), GetPitch());
+            if (units == "")
+            {
+                return string.Format("{0:N2} at heading {1:N2} deg and pitch {2:N2} deg", GetMagnitude(), GetHeading(), GetPitch());
+            }
+            else
+            {
+                return string.Format("{0:N2} " + units + " at heading {1:N2} deg and pitch {2:N2} deg", GetMagnitude(), GetHeading(), GetPitch());
+            }
         }
 
         /// <summary>
@@ -120,7 +128,7 @@ namespace MPGLabs
         /// <returns>a string containing all three Euler Angles of the vector in degrees</returns>
         public string PrintEulerAngles()
         {
-            return String.Format("alpha = {0:N2} deg; beta = {1:N2} deg; gamma = {2:N2} deg", GetAlpha(), GetBeta(), GetGamma());
+            return string.Format("alpha = {0:N2} deg; beta = {1:N2} deg; gamma = {2:N2} deg", GetAlpha(), GetBeta(), GetGamma());
         }
 
         /// <summary>
