@@ -187,6 +187,8 @@ namespace MPGLabs
             
         }
 
+        #region Operator Overloads
+
         /// <summary>
         /// Returns the angle between the vector and the xy-plane
         /// </summary>
@@ -332,5 +334,7 @@ namespace MPGLabs
         {
             return ((u | v) - u);
         }
+
+        #endregion
     }
 }

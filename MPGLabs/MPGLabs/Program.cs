@@ -74,9 +74,9 @@ namespace MPGLabs
                 move.SetRectGivenMagHeadPitch(magnitude, heading, pitch);
                 bee += move; //update the bee's position
                 Console.WriteLine("bee has moved " + bee.PrintMagHeadPitch("furlongs"));
-                Console.WriteLine("closest point on the pole is " + (bee | pole).PrintMagHeadPitch("furlongs"));
+                Console.WriteLine("closest point on the pole is " + (bee | pole).PrintRect());
             }
-            Console.WriteLine("bee needs to move " + (bee - pole).PrintMagHeadPitch("furlongs") + " to reach the end of the pole");
+            Console.WriteLine("bee needs to move " + (pole - bee).PrintMagHeadPitch("furlongs") + " to reach the end of the pole");
         }
 
         #region Vector Lab
