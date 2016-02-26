@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
+using System.IO;
 
 namespace MPGLabs
 {
@@ -19,20 +19,116 @@ namespace MPGLabs
         //Create a program that determines the position and velocity for the ball specified in Procedure 1 using the Forward Euler method, but instead of assuming the acceleration to be a constant -9.8 m/s2, use the relationship, a=−9.8−0.10v, where a is in units of m/s2 and v is in units of m/s. This relationship will model the affect of air resistance on the ball. Output the time and position to a file named “ex02_wind.csv” and plot the data using a spreadsheet.
         //Demonstrate the execution of your code and the graphical results to your instructor.
 
-        float initialHeight = 2f; //meters
-        float initialVelocity = 49f; //meters per second
-        float startTime = 0f; //seconds
-        float stopTime = 10f; //seconds
-        float timeStepOne = .1f; //seconds
-        float timeStepTwo = 1f; //seconds
-        float timeStepThree = .01f; //seconds
+        static float initialHeight = 2f; //meters
+        static float initialVelocity = 49f; //meters per second
+        static float startTime = 0f; //seconds
+        static float stopTime = 10f; //seconds
+        static float timeStepOne = .1f; //seconds
+        static float timeStepTwo = 1f; //seconds
+        static float timeStepThree = .01f; //seconds
 
-        float gravity = 9.8f; //meters per second squared
-        string fileOne = "ex02_euler_0-10.csv";
-        string fileTwo = "ex02_euler_1-00.csv";
-        string fileThree = "ex02_euler_0-01.csv";
-        string fileFour = "ex02_analytic.csv";
+        static float gravity = 9.8f; //meters per second squared
+        static string fileOne = "ex02_euler_0-10.csv";
+        static string fileTwo = "ex02_euler_1-00.csv";
+        static string fileThree = "ex02_euler_0-01.csv";
+        static string fileFour = "ex02_analytic.csv";
+        static string fileFive = "ex02_wind.csv";
         
+        public static void RunLAM()
+        {
+            //Forward Euler with a time step of .1 seconds
+            using (StreamWriter writer = new StreamWriter("..//..//" + fileOne))
+            {
+                float timeStep = timeStepOne;
+                float pos = initialHeight;
+                float time = startTime;
+                float velocity = initialVelocity;
+                writer.WriteLine("time,position,velocity");
+                writer.WriteLine("{0},{1},{2}", time, pos, velocity);
+                while (time <= stopTime)
+                {
+                    time += timeStep;
+                    pos += velocity * timeStep;
+                    velocity -= gravity * timeStep;
+                    writer.WriteLine("{0},{1},{2}", time, pos, velocity);
+                }
+            }
 
+            //Forward Euler with a timestep of 1 second
+            using (StreamWriter writer = new StreamWriter("..//..//" + fileTwo))
+            {
+                float timeStep = timeStepTwo;
+                float pos = initialHeight;
+                float time = startTime;
+                float velocity = initialVelocity;
+                writer.WriteLine("time,position,velocity");
+                writer.WriteLine("{0},{1},{2}", time, pos, velocity);
+                while (time <= stopTime)
+                {
+                    time += timeStep;
+                    pos += velocity * timeStep;
+                    velocity -= gravity * timeStep;
+                    writer.WriteLine("{0},{1},{2}", time, pos, velocity);
+                }
+            }
+
+            //Forward Euler with a timestep of .01 seconds
+            using (StreamWriter writer = new StreamWriter("..//..//" + fileThree))
+            {
+                float timeStep = timeStepThree;
+                float pos = initialHeight;
+                float time = startTime;
+                float velocity = initialVelocity;
+                writer.WriteLine("time,position,velocity");
+                writer.WriteLine("{0},{1},{2}", time, pos, velocity);
+                while (time <= stopTime)
+                {
+                    time += timeStep;
+                    pos += velocity * timeStep;
+                    velocity -= gravity * timeStep;
+                    writer.WriteLine("{0},{1},{2}", time, pos, velocity);
+                }
+            }
+
+            //Analytic values
+            using (StreamWriter writer = new StreamWriter("..//..//" + fileFour))
+            {
+                float timeStep = timeStepOne;
+                float pos = initialHeight;
+                float time = startTime;
+                float velocity = initialVelocity;
+                writer.WriteLine("time,position,velocity");
+                writer.WriteLine("{0},{1},{2}", time, pos, velocity);
+                while (time <= stopTime)
+                {
+                    time += timeStep;
+                    pos = initialHeight + initialVelocity * time - .5f * gravity * time * time;
+                    velocity = initialVelocity - gravity * time;
+                    writer.WriteLine("{0},{1},{2}", time, pos, velocity);
+                }
+            }
+
+            //Forward Euler with a timestep of .1 seconds and inclusion of wind resistance
+            using (StreamWriter writer = new StreamWriter("..//..//" + fileFive))
+            {
+                float timeStep = timeStepOne;
+                float pos = initialHeight;
+                float time = startTime;
+                float velocity = initialVelocity;
+                float acceleration = -gravity;
+                writer.WriteLine("time,position,velocity");
+                writer.WriteLine("{0},{1},{2}", time, pos, velocity);
+                while (time <= stopTime)
+                {
+                    time += timeStep;
+                    pos += velocity * timeStep;
+                    velocity += acceleration * timeStep;
+                    acceleration = -gravity - .1f * velocity;
+                    writer.WriteLine("{0},{1},{2}", time, pos, velocity);
+                }
+            }
+
+
+        }
     }
 }
