@@ -13,7 +13,7 @@ namespace MPGLabs
                 Console.WriteLine("Menu:");
                 Console.WriteLine("[1]: Vector3D Lab");
                 Console.WriteLine("[2]: Projections Lab");
-                Console.WriteLine("[3]: ...");
+                Console.WriteLine("[3]: Generate Linear Accelerated Motion Files");
                 Console.WriteLine("[4]: ...");
                 Console.WriteLine("[5]: ...");
                 Console.WriteLine("[6]: Quit");
@@ -29,7 +29,7 @@ namespace MPGLabs
                         ProjectionLab();
                         break;
                     case "3":
-                        Console.WriteLine("Not yet implemented.");
+                        LinearAcceleratedMotion.RunLAM();
                         break;
                     case "4":
                         Console.WriteLine("Not yet implemented.");
