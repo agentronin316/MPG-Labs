@@ -5,8 +5,11 @@ namespace MPGLabs
     /// <summary>
     /// @author Marshall R Mason
     /// </summary>
-    class Vector3D
+    public class Vector3D
     {
+        //define the zero vector
+        public static Vector3D zero = new Vector3D(0, 0, 0);
+
         //x, y, z, and w components of the vector
         public float X { get; private set; }
         public float Y { get; private set; }
@@ -28,13 +31,14 @@ namespace MPGLabs
             return radians * RAD_TO_DEG;
         }
 
-        
-        public Vector3D()
-        {
-            //set x, y, z, w to 0, 0, 0, 1
-            X = Y = Z = 0;
-            W = 1;
-        }
+        #region VectorLab
+
+        //public Vector3D()
+        //{
+        //    //set x, y, z, w to 0, 0, 0, 1
+        //    X = Y = Z = 0;
+        //    W = 1;
+        //}
 
         public Vector3D(float x, float y, float z = 0)
         {
@@ -187,7 +191,6 @@ namespace MPGLabs
             
         }
 
-        #region Operator Overloads
 
         /// <summary>
         /// Returns the angle between the vector and the xy-plane
@@ -225,6 +228,9 @@ namespace MPGLabs
             return GetMagnitude() == 0 ? 0f : Rad2Deg((float)(Math.Acos(Z / GetMagnitude())));
         }
 
+        #endregion
+
+        #region Operator Overloads
 
         /// <summary>
         /// Addition of two vectors
@@ -234,7 +240,7 @@ namespace MPGLabs
         /// <returns></returns>
         public static Vector3D operator + (Vector3D u, Vector3D v)
         {
-            Vector3D toReturn = new Vector3D();
+            Vector3D toReturn = zero;
             toReturn.SetRectGivenRect(u.X + v.X, u.Y + v.Y, u.Z + v.Z);
             return toReturn;
         }
@@ -247,7 +253,7 @@ namespace MPGLabs
         /// <returns></returns>
         public static Vector3D operator - (Vector3D u, Vector3D v)
         {
-            Vector3D toReturn = new Vector3D();
+            Vector3D toReturn = zero;
             toReturn.SetRectGivenRect(u.X - v.X, u.Y - v.Y, u.Z - v.Z);
             return toReturn;
         }
@@ -260,7 +266,7 @@ namespace MPGLabs
         /// <returns></returns>
         public static Vector3D operator *(float a, Vector3D v)
         {
-            Vector3D toReturn = new Vector3D();
+            Vector3D toReturn = zero;
             toReturn.SetRectGivenRect(a * v.X, a * v.Y, a * v.Z);
             return toReturn;
         }
@@ -273,7 +279,7 @@ namespace MPGLabs
         /// <returns></returns>
         public static Vector3D operator *(Vector3D v, float a)
         {
-            Vector3D toReturn = new Vector3D();
+            Vector3D toReturn = zero;
             toReturn.SetRectGivenRect(a * v.X, a * v.Y, a * v.Z);
             return toReturn;
         }
@@ -285,9 +291,16 @@ namespace MPGLabs
         /// <returns></returns>
         public static Vector3D operator !(Vector3D v)
         {
-            Vector3D toReturn = new Vector3D();
-            toReturn.SetRectGivenRect(v.X / v.GetMagnitude(), v.Y / v.GetMagnitude(), v.Z / v.GetMagnitude());
-            return toReturn;
+            if (v.GetMagnitude() == 0)
+            {
+                return v;
+            }
+            else
+            {
+                Vector3D toReturn = zero;
+                toReturn.SetRectGivenRect(v.X / v.GetMagnitude(), v.Y / v.GetMagnitude(), v.Z / v.GetMagnitude());
+                return toReturn;
+            }
         }
 
 
@@ -332,7 +345,7 @@ namespace MPGLabs
         /// <returns></returns>
         public static Vector3D operator ^(Vector3D u, Vector3D v)
         {
-            return ((u | v) - u);
+            return (u - (u | v));
         }
 
         #endregion

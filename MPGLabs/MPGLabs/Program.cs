@@ -14,7 +14,7 @@ namespace MPGLabs
                 Console.WriteLine("[1]: Vector3D Lab");
                 Console.WriteLine("[2]: Projections Lab");
                 Console.WriteLine("[3]: Generate Linear Accelerated Motion Files");
-                Console.WriteLine("[4]: ...");
+                Console.WriteLine("[4]: Force and Motion Lab");
                 Console.WriteLine("[5]: ...");
                 Console.WriteLine("[6]: Quit");
                 Console.Write("Input your selection: ");
@@ -32,7 +32,7 @@ namespace MPGLabs
                         LinearAcceleratedMotion.RunLAM();
                         break;
                     case "4":
-                        Console.WriteLine("Not yet implemented.");
+                        ForceAndMotion();
                         break;
                     case "5":
                         Console.WriteLine("Not yet implemented.");
@@ -46,11 +46,78 @@ namespace MPGLabs
             } while (menuChoice != "6");
         }
 
+        #region Force and Motion Lab
+
+        static void ForceAndMotion()
+        {
+            string menuChoice;
+            do
+            {
+                Console.Clear();
+                Console.WriteLine("Menu:");
+                Console.WriteLine("[1]: Sliding Box");
+                Console.WriteLine("[2]: Model Rocket");
+                Console.WriteLine("[3]: Quit");
+                Console.Write("Input your selection: ");
+                menuChoice = Console.ReadLine();
+
+                switch (menuChoice)
+                {
+                    case "1":
+                        SlidingBox();
+                        break;
+                    case "2":
+                        ModelRocket();
+                        break;
+                    case "3":
+                        Console.WriteLine("Goodbye.");
+                        break;
+                }
+                Console.Write("Press any key to continue...");
+                Console.ReadKey();
+            } while (menuChoice != "3");
+        }
+
+        static void SlidingBox()
+        {
+            float timeStep = .1f;
+            float time = 0;
+            Vector3D normalForce = new Vector3D(0, 0, 9.8f);
+            Console.Write("Input an initial speed (m/s): ");
+            float speed = Convert.ToSingle(Console.ReadLine());
+            Console.WriteLine("Speed is {0:N2} m/s", speed);
+            Vector3D velocity = new Vector3D(speed, 0);
+            Console.WriteLine("Velocity is {0:N2} m/s", velocity.X);
+            
+            Console.Write("Input the coefficient of kinetic friction: ");
+            float coefficientOfKineticFriction = Convert.ToSingle(Console.ReadLine());
+            Vector3D friction = MPGPhysics.KineticFriction(velocity, normalForce, coefficientOfKineticFriction);
+            Vector3D position = Vector3D.zero;
+            
+            while (-friction.X <= velocity.X)
+            {
+                position = position + (velocity * timeStep);
+                velocity = velocity + (friction * timeStep);
+                time += timeStep;
+                Console.WriteLine("Position: {0:N2}m; Velocity: {1:N2}m/s; Time: {2:N2}", position.X, velocity.X, time);
+            }
+            Console.WriteLine("Box stops after {0:N2} seconds, {1:N2} meters away", time, position.GetMagnitude());
+        }
+
+        static void ModelRocket()
+        {
+
+        }
+
+        #endregion
+
+        #region Projection Lab
+
         static void ProjectionLab()
         {
             //Declare vectors for tracking the end of the pole and the bee
-            Vector3D pole = new Vector3D();
-            Vector3D bee = new Vector3D();
+            Vector3D pole = Vector3D.zero;
+            Vector3D bee = Vector3D.zero;
 
             //Collect user input about the pole
             Console.Write("Input length of the utility pole in furlongs: ");
@@ -70,7 +137,7 @@ namespace MPGLabs
                 heading = Convert.ToSingle(Console.ReadLine());
                 Console.Write("Input the bee's pitch in degrees: ");
                 pitch = Convert.ToSingle(Console.ReadLine());
-                Vector3D move = new Vector3D();
+                Vector3D move = Vector3D.zero;
                 move.SetRectGivenMagHeadPitch(magnitude, heading, pitch);
                 bee += move; //update the bee's position
                 Console.WriteLine("bee has moved " + bee.PrintMagHeadPitch("furlongs"));
@@ -78,6 +145,8 @@ namespace MPGLabs
             }
             Console.WriteLine("bee needs to move " + (pole - bee).PrintMagHeadPitch("furlongs") + " to reach the end of the pole");
         }
+
+        #endregion
 
         #region Vector Lab
         static void VectorLab()
@@ -121,8 +190,8 @@ namespace MPGLabs
 
         private static void ParallelProjection()
         {
-            Vector3D vectorOne = new Vector3D();
-            Vector3D vectorTwo = new Vector3D();
+            Vector3D vectorOne = Vector3D.zero;
+            Vector3D vectorTwo = Vector3D.zero;
             Console.Write("Input the x coordinate for the first vector: ");
             float x = Convert.ToSingle(Console.ReadLine());
             Console.Write("Input the y coordinate for the first vector: ");
@@ -146,7 +215,7 @@ namespace MPGLabs
 
         static void Rect2D()
         {
-            Vector3D vector = new Vector3D();
+            Vector3D vector = Vector3D.zero;
             Console.Write("Input the x value for the vector: ");
             float x = Convert.ToSingle(Console.ReadLine());
             Console.Write("Input the y value for the vector: ");
@@ -161,7 +230,7 @@ namespace MPGLabs
 
         static void Rect3D()
         {
-            Vector3D vector = new Vector3D();
+            Vector3D vector = Vector3D.zero;
             Console.Write("Input the x value for the vector: ");
             float x = Convert.ToSingle(Console.ReadLine());
             Console.Write("Input the y value for the vector: ");
@@ -178,7 +247,7 @@ namespace MPGLabs
 
         static void Polar()
         {
-            Vector3D vector = new Vector3D();
+            Vector3D vector = Vector3D.zero;
             Console.Write("Input the magnitude of the vector: ");
             float mag = Convert.ToSingle(Console.ReadLine());
             Console.Write("Input the angle of the vector in degrees: ");
@@ -193,7 +262,7 @@ namespace MPGLabs
 
         static void MagHeadPitch()
         {
-            Vector3D vector = new Vector3D();
+            Vector3D vector = Vector3D.zero;
             Console.Write("Input the magnitude of the vector: ");
             float mag = Convert.ToSingle(Console.ReadLine());
             Console.Write("Input the heading of the vector in degrees: ");
