@@ -106,6 +106,7 @@ namespace MPGLabs
             float coefficientOfWindResistance = .02f;
             Vector3D thrustForce = Vector3D.zero;
             thrustForce.SetRectGivenMagHeadPitch(10f, 23f, 62f); //newtons
+            Console.WriteLine(Vector3D.zero.PrintRect());
             Vector3D thrustAcc = inverseMass * thrustForce; //m/(s^2)
             Vector3D velocity = Vector3D.zero; 
             Vector3D gravityAcc = new Vector3D(0f, 0f, -9.8f); //m/(s^2)
@@ -116,7 +117,7 @@ namespace MPGLabs
             {
                 position = position + timeStep * velocity;
                 velocity = velocity + timeStep * acceleration;
-                acceleration = gravityAcc + thrustAcc - velocity * coefficientOfWindResistance;
+                acceleration = gravityAcc + thrustAcc - (velocity * (coefficientOfWindResistance * inverseMass));
                 time += timeStep;
                 Console.WriteLine(position.PrintRect() + " " + velocity.PrintRect() + " " + time);
             }
@@ -124,7 +125,7 @@ namespace MPGLabs
             {
                 position = position + timeStep * velocity;
                 velocity = velocity + timeStep * acceleration;
-                acceleration = gravityAcc - velocity * coefficientOfWindResistance;
+                acceleration = gravityAcc - (velocity * (coefficientOfWindResistance * inverseMass));
                 time += timeStep;
             }
             Console.WriteLine("Rocket lands at ({0:N2}, {1:N2}) m after {2:N2} seconds of flight.", position.X, position.Y, time);
