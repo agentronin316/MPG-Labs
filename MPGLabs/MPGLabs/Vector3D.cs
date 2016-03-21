@@ -320,10 +320,17 @@ namespace MPGLabs
         /// </summary>
         /// <param name="u"></param>
         /// <param name="v"></param>
-        /// <returns></returns>
+        /// <returns>Angle in radians</returns>
         public static float operator &(Vector3D u, Vector3D v)
         {
-            return (float)(Math.Acos((u * v) / (u.GetMagnitude() * v.GetMagnitude())));
+            if (u == zero || v == zero)
+            {
+                return 0f;
+            }
+            else
+            {
+                return (float)(Math.Acos((u * v) / (u.GetMagnitude() * v.GetMagnitude())));
+            }
         }
 
         /// <summary>
@@ -334,7 +341,14 @@ namespace MPGLabs
         /// <returns></returns>
         public static Vector3D operator |(Vector3D u, Vector3D v)
         {
-            return ((u * v) / (v.GetMagnitude() * v.GetMagnitude())) * v;
+            if (v == zero)
+            {
+                return v;
+            }
+            else
+            {
+                return ((u * v) / (v.GetMagnitude() * v.GetMagnitude())) * v;
+            }
         }
 
         /// <summary>

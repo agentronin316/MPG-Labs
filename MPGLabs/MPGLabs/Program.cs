@@ -69,9 +69,6 @@ namespace MPGLabs
                     case "2":
                         ModelRocket();
                         break;
-                    case "3":
-                        Console.WriteLine("Goodbye.");
-                        break;
                 }
                 Console.Write("Press any key to continue...");
                 Console.ReadKey();
@@ -85,28 +82,53 @@ namespace MPGLabs
             Vector3D normalForce = new Vector3D(0, 0, 9.8f);
             Console.Write("Input an initial speed (m/s): ");
             float speed = Convert.ToSingle(Console.ReadLine());
-            Console.WriteLine("Speed is {0:N2} m/s", speed);
+            //Console.WriteLine("Speed is {0:N2} m/s", speed);
             Vector3D velocity = new Vector3D(speed, 0);
-            Console.WriteLine("Velocity is {0:N2} m/s", velocity.X);
-            
+            //Console.WriteLine("Velocity is {0:N2} m/s", velocity.X);
+
             Console.Write("Input the coefficient of kinetic friction: ");
             float coefficientOfKineticFriction = Convert.ToSingle(Console.ReadLine());
             Vector3D friction = MPGPhysics.KineticFriction(velocity, normalForce, coefficientOfKineticFriction);
-            Vector3D position = Vector3D.zero;
-            
-            while (-friction.X <= velocity.X)
+            float position = 0f;
+            //Console.WriteLine("Friction: {0:N2}", friction.X);
+            //Console.ReadKey();
+            while (-friction.X * timeStep <= speed)
             {
-                position = position + (velocity * timeStep);
-                velocity = velocity + (friction * timeStep);
+                position = position + (speed * timeStep);
+                speed = speed + (friction.X * timeStep);
                 time += timeStep;
-                Console.WriteLine("Position: {0:N2}m; Velocity: {1:N2}m/s; Time: {2:N2}", position.X, velocity.X, time);
+                //Console.WriteLine("Position: {0:N2}m; Velocity: {1:N2}m/s; Time: {2:N2}", position, speed, time);
             }
-            Console.WriteLine("Box stops after {0:N2} seconds, {1:N2} meters away", time, position.GetMagnitude());
+            Console.WriteLine("Box stops after {0:N2} seconds, {1:N2} meters away", time, position);
         }
 
         static void ModelRocket()
         {
-
+            Vector3D position = new Vector3D(0, 0, .2f);
+            float inverseMass = 1 / .0742f;
+            float coefficientOfWindResistance = .02f;
+            Vector3D thrustForce = Vector3D.zero;
+            thrustForce.SetRectGivenMagHeadPitch(10f, 23f, 62f);
+            Vector3D acceleration = inverseMass * thrustForce;
+            Console.WriteLine(acceleration.PrintRect());
+            Vector3D velocity = Vector3D.zero;
+            Vector3D gravityAcc = new Vector3D(0f, 0f, -9.8f);
+            float timeStep = .1f;
+            float time = 0f;
+            while (time < 1f)
+            {
+                position = position + timeStep * velocity;
+                velocity = (1 - coefficientOfWindResistance * timeStep) * velocity + timeStep * (acceleration + gravityAcc);
+                time += timeStep;
+                Console.WriteLine(position.PrintRect() + " " + velocity.PrintRect() + " " + time);
+            }
+            while (position.Z > 0)
+            {
+                position = position + timeStep * velocity;
+                velocity = (1f - coefficientOfWindResistance) * velocity + timeStep * gravityAcc;
+                time += timeStep;
+            }
+            Console.WriteLine("Rocket lands at ({0:N2}, {1:N2}) m after {2:N2} seconds of flight.", position.X, position.Y, time);
         }
 
         #endregion
