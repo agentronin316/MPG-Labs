@@ -77,55 +77,54 @@ namespace MPGLabs
 
         static void SlidingBox()
         {
-            float timeStep = .1f;
-            float time = 0;
-            Vector3D normalForce = new Vector3D(0, 0, 9.8f);
+            //Giant pile of variables, assuming mass == 1
+            float timeStep = .1f; //seconds
+            float time = 0; //seconds
+            Vector3D normalForce = new Vector3D(0, 0, 9.8f); //newtons
             Console.Write("Input an initial speed (m/s): ");
             float speed = Convert.ToSingle(Console.ReadLine());
-            //Console.WriteLine("Speed is {0:N2} m/s", speed);
-            Vector3D velocity = new Vector3D(speed, 0);
-            //Console.WriteLine("Velocity is {0:N2} m/s", velocity.X);
+            Vector3D velocity = new Vector3D(speed, 0); //m/s
 
             Console.Write("Input the coefficient of kinetic friction: ");
             float coefficientOfKineticFriction = Convert.ToSingle(Console.ReadLine());
-            Vector3D friction = MPGPhysics.KineticFriction(velocity, normalForce, coefficientOfKineticFriction);
-            float position = 0f;
-            //Console.WriteLine("Friction: {0:N2}", friction.X);
-            //Console.ReadKey();
-            while (-friction.X * timeStep <= speed)
+            Vector3D friction = MPGPhysics.KineticFriction(velocity, normalForce, coefficientOfKineticFriction); //newtons
+            float position = 0f; //meters
+            while (-friction.X * timeStep <= speed) //check if velocity will be zero at end of time step
             {
                 position = position + (speed * timeStep);
                 speed = speed + (friction.X * timeStep);
                 time += timeStep;
-                //Console.WriteLine("Position: {0:N2}m; Velocity: {1:N2}m/s; Time: {2:N2}", position, speed, time);
             }
             Console.WriteLine("Box stops after {0:N2} seconds, {1:N2} meters away", time, position);
         }
 
         static void ModelRocket()
         {
-            Vector3D position = new Vector3D(0, 0, .2f);
-            float inverseMass = 1 / .0742f;
+            //Giant pile of Variables
+            Vector3D position = new Vector3D(0, 0, .2f); //meters
+            float inverseMass = 1 / .0742f; //kilograms
             float coefficientOfWindResistance = .02f;
             Vector3D thrustForce = Vector3D.zero;
-            thrustForce.SetRectGivenMagHeadPitch(10f, 23f, 62f);
-            Vector3D acceleration = inverseMass * thrustForce;
-            Console.WriteLine(acceleration.PrintRect());
-            Vector3D velocity = Vector3D.zero;
-            Vector3D gravityAcc = new Vector3D(0f, 0f, -9.8f);
-            float timeStep = .1f;
-            float time = 0f;
-            while (time < 1f)
+            thrustForce.SetRectGivenMagHeadPitch(10f, 23f, 62f); //newtons
+            Vector3D thrustAcc = inverseMass * thrustForce; //m/(s^2)
+            Vector3D velocity = Vector3D.zero; 
+            Vector3D gravityAcc = new Vector3D(0f, 0f, -9.8f); //m/(s^2)
+            Vector3D acceleration = gravityAcc + thrustAcc; //m/(s^2)
+            float timeStep = .1f; //seconds
+            float time = 0f; //seconds
+            while (time < 1f) //under thrust
             {
                 position = position + timeStep * velocity;
-                velocity = (1 - coefficientOfWindResistance * timeStep) * velocity + timeStep * (acceleration + gravityAcc);
+                velocity = velocity + timeStep * acceleration;
+                acceleration = gravityAcc + thrustAcc - velocity * coefficientOfWindResistance;
                 time += timeStep;
                 Console.WriteLine(position.PrintRect() + " " + velocity.PrintRect() + " " + time);
             }
-            while (position.Z > 0)
+            while (position.Z > 0) //post thrust
             {
                 position = position + timeStep * velocity;
-                velocity = (1f - coefficientOfWindResistance) * velocity + timeStep * gravityAcc;
+                velocity = velocity + timeStep * acceleration;
+                acceleration = gravityAcc - velocity * coefficientOfWindResistance;
                 time += timeStep;
             }
             Console.WriteLine("Rocket lands at ({0:N2}, {1:N2}) m after {2:N2} seconds of flight.", position.X, position.Y, time);

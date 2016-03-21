@@ -8,7 +8,7 @@ namespace MPGLabs
     public class Vector3D
     {
         //define the zero vector
-        public static Vector3D zero = new Vector3D(0, 0, 0);
+        public readonly static Vector3D zero = new Vector3D(0, 0, 0);
 
         //x, y, z, and w components of the vector
         public float X { get; private set; }
@@ -240,8 +240,7 @@ namespace MPGLabs
         /// <returns></returns>
         public static Vector3D operator + (Vector3D u, Vector3D v)
         {
-            Vector3D toReturn = zero;
-            toReturn.SetRectGivenRect(u.X + v.X, u.Y + v.Y, u.Z + v.Z);
+            Vector3D toReturn = new Vector3D(u.X + v.X, u.Y + v.Y, u.Z + v.Z);
             return toReturn;
         }
 
@@ -253,8 +252,7 @@ namespace MPGLabs
         /// <returns></returns>
         public static Vector3D operator - (Vector3D u, Vector3D v)
         {
-            Vector3D toReturn = zero;
-            toReturn.SetRectGivenRect(u.X - v.X, u.Y - v.Y, u.Z - v.Z);
+            Vector3D toReturn = new Vector3D(u.X - v.X, u.Y - v.Y, u.Z - v.Z);
             return toReturn;
         }
 
@@ -266,8 +264,7 @@ namespace MPGLabs
         /// <returns></returns>
         public static Vector3D operator *(float a, Vector3D v)
         {
-            Vector3D toReturn = zero;
-            toReturn.SetRectGivenRect(a * v.X, a * v.Y, a * v.Z);
+            Vector3D toReturn = new Vector3D(a * v.X, a * v.Y, a * v.Z);
             return toReturn;
         }
 
@@ -279,8 +276,7 @@ namespace MPGLabs
         /// <returns></returns>
         public static Vector3D operator *(Vector3D v, float a)
         {
-            Vector3D toReturn = zero;
-            toReturn.SetRectGivenRect(a * v.X, a * v.Y, a * v.Z);
+            Vector3D toReturn = new Vector3D(a * v.X, a * v.Y, a * v.Z);
             return toReturn;
         }
 
@@ -297,8 +293,7 @@ namespace MPGLabs
             }
             else
             {
-                Vector3D toReturn = zero;
-                toReturn.SetRectGivenRect(v.X / v.GetMagnitude(), v.Y / v.GetMagnitude(), v.Z / v.GetMagnitude());
+                Vector3D toReturn = new Vector3D(v.X / v.GetMagnitude(), v.Y / v.GetMagnitude(), v.Z / v.GetMagnitude());
                 return toReturn;
             }
         }
