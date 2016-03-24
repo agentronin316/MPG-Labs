@@ -5,7 +5,7 @@ namespace MPGLabs
     /// <summary>
     /// @author Marshall R Mason
     /// </summary>
-    public class Vector3D
+    public struct Vector3D
     {
         //define the zero vector
         public readonly static Vector3D zero = new Vector3D(0, 0, 0);
@@ -242,6 +242,28 @@ namespace MPGLabs
         {
             Vector3D toReturn = new Vector3D(u.X + v.X, u.Y + v.Y, u.Z + v.Z);
             return toReturn;
+        }
+
+        /// <summary>
+        /// Boolean equality operator
+        /// </summary>
+        /// <param name="u"></param>
+        /// <param name="v"></param>
+        /// <returns></returns>
+        public static bool operator == (Vector3D u, Vector3D v)
+        {
+            return (u.X == v.X && u.Y == v.Y && u.Z == v.Z && u.W == v.W);
+        }
+
+        /// <summary>
+        /// Boolean inequality operator
+        /// </summary>
+        /// <param name="u"></param>
+        /// <param name="v"></param>
+        /// <returns></returns>
+        public static bool operator != (Vector3D u, Vector3D v)
+        {
+            return !(u.X == v.X && u.Y == v.Y && u.Z == v.Z && u.W == v.W);
         }
 
         /// <summary>
