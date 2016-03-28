@@ -15,8 +15,13 @@ namespace MPGLabs
                 Console.WriteLine("[2]: Projections Lab");
                 Console.WriteLine("[3]: Generate Linear Accelerated Motion Files");
                 Console.WriteLine("[4]: Force and Motion Lab");
-                Console.WriteLine("[5]: ...");
-                Console.WriteLine("[6]: Quit");
+                Console.WriteLine("[5]: Work and Energy Lab");
+                Console.WriteLine("[6]: ...");
+                Console.WriteLine("[7]: ...");
+                Console.WriteLine("[8]: ...");
+                Console.WriteLine("[9]: ...");
+                Console.WriteLine("[10]: ...");
+                Console.WriteLine("[11]: Quit");
                 Console.Write("Input your selection: ");
                 menuChoice = Console.ReadLine();
 
@@ -35,16 +40,173 @@ namespace MPGLabs
                         ForceAndMotion();
                         break;
                     case "5":
-                        Console.WriteLine("Not yet implemented.");
+                        WorkAndEnergy();
                         break;
                     case "6":
+                        Console.WriteLine("Not yet implemented.");
+                        break;
+                    case "7":
+                        Console.WriteLine("Not yet implemented.");
+                        break;
+                    case "8":
+                        Console.WriteLine("Not yet implemented.");
+                        break;
+                    case "9":
+                        Console.WriteLine("Not yet implemented.");
+                        break;
+                    case "10":
+                        Console.WriteLine("Not yet implemented.");
+                        break;
+                    case "11":
                         Console.WriteLine("Goodbye.");
                         break;
                 }
                 Console.Write("Press any key to continue...");
                 Console.ReadKey();
-            } while (menuChoice != "6");
+            } while (menuChoice != "11");
         }
+
+        #region Work and Energy
+
+        static void WorkAndEnergy()
+        {
+            string menuChoice;
+            do
+            {
+                Console.Clear();
+                Console.WriteLine("Menu:");
+                Console.WriteLine("[1]: Box on Incline");
+                Console.WriteLine("[2]: Orbit");
+                Console.WriteLine("[3]: Quit");
+                Console.Write("Input your selection: ");
+                menuChoice = Console.ReadLine();
+
+                switch (menuChoice)
+                {
+                    case "1":
+                        BoxOnIncline();
+                        break;
+                    case "2":
+                        Orbit();
+                        break;
+                }
+                Console.Write("Press any key to continue...");
+                Console.ReadKey();
+            } while (menuChoice != "3");
+        }
+
+        static void BoxOnIncline()
+        {
+            //giant block o' variables
+            Console.Write("Please enter an initial velocity in m/s: ");
+            float velocity = Convert.ToSingle(Console.ReadLine());
+            Console.Write("Please enter a percentage of kinetic energy to remove each step: ");
+            float percentKELossPerStep = Convert.ToSingle(Console.ReadLine());
+            float mass = 100f; //kg
+            float timeStep = .05f; //seconds
+            float arbitrarySmallAmount = .001f; //m
+            float velocityLossFactor = (float)Math.Sqrt(1f - percentKELossPerStep); //vNew = Sqrt(vOld^2 * (1-loss) = vOld * Sqrt(1 - loss)
+            float position = 0f; //m
+            float acceleration = ((.3219f * (position - arbitrarySmallAmount) - (.3219f * (position + arbitrarySmallAmount)) * 9.8f / (2f * arbitrarySmallAmount))); //m/(s^2) //netForce / mass
+            float potentialEnergy = 0f; //N
+            float kineticEnergy = 0f; //N
+
+            //start simulation loop
+            for (float time = 0; time < 360 && .3219f * position <= 10.0f; time += timeStep) //time is in seconds //run for 6 minutes, or until the box reaches the end of the ramp
+            {
+                position += velocity * timeStep; //update position
+                velocity += acceleration * timeStep; //update velocity
+                acceleration = ((.3219f * (position - arbitrarySmallAmount) - (.3219f * (position + arbitrarySmallAmount)) * 9.8f / (2f * arbitrarySmallAmount))); //update acceleration
+                velocity = velocity * velocityLossFactor; //account for loss of kinetic energy
+                potentialEnergy = (-.3219f * position + 10.0f) * mass * 9.8f; //calculate potential energy
+                kineticEnergy = mass * velocity * velocity / 2f; //calculate kinetic energy
+                Console.WriteLine("Potential Energy: {0:N2}N, Kinetic Energy:  {1:N2}N, Total Energy:  {2:N2}N", potentialEnergy, kineticEnergy, potentialEnergy + kineticEnergy);
+            }
+        }
+
+        static void Orbit()
+        {
+            //giant block o' variables
+            Console.Write("Input initial speed in km/s: ");
+            Vector3D velocity = new Vector3D(Convert.ToSingle(Console.ReadLine()) * 1000f, 0); //m/s
+            Vector3D position = new Vector3D(0, 6778000f); //m
+            float massOfSpacecraft = 225f; //kg
+            float inverseMassOfSpacecraft = 1 / massOfSpacecraft; //1/kg
+            float massOfEarth = 5.98e24f; //kg
+            float radiusOfEarth = 6378000f; //m
+            float atmosphereRadius = 6478000f; //m
+            int timeStep = 10; //s
+            float arbitrarySmallAmount = 1f; //m
+            float altitude = (position.Y - radiusOfEarth) / 1000f; //km
+            float speed = velocity.X / 1000f; //km/s
+            float totalEnergy = (massOfSpacecraft * speed * speed * 500000f) + GravityPE(position.GetMagnitude(), massOfSpacecraft, massOfEarth); //N
+            Vector3D acceleration = inverseMassOfSpacecraft * GravityPEForce2D (position, massOfSpacecraft, massOfEarth, arbitrarySmallAmount); //m/(s^2)
+
+            //start simulation loop
+            for (int time = 0; time < 200 && position.GetMagnitude() > atmosphereRadius; time += timeStep) //time is in seconds
+            {
+                position += velocity * timeStep; //update position
+                velocity += acceleration * timeStep; //update velocity
+                acceleration = inverseMassOfSpacecraft * GravityPEForce2D(position, massOfSpacecraft, massOfEarth, arbitrarySmallAmount); //update acceleration
+
+                //calculate and display output
+                altitude = (position.GetMagnitude() - radiusOfEarth) / 1000f;
+                speed = velocity.GetMagnitude() / 1000f;
+                totalEnergy = (massOfSpacecraft * speed * speed * 500000f) + GravityPE(position.GetMagnitude(), massOfSpacecraft, massOfEarth);
+                Console.WriteLine("Time: {0:N}s, Altitude: {1:N2}km, Speed: {2:N2}km/s, Total energy: {3:N2}N", time, altitude, speed, totalEnergy);
+
+            }
+            if (position.GetMagnitude() <= atmosphereRadius)
+            {
+                Console.WriteLine("Crashed into atmosphere! Go faster next time!");
+            }
+        }
+
+        /// <summary>
+        /// Get the potential energy as a float value
+        /// </summary>
+        /// <param name="position">the vector from the center of the object exerting the gravity to the object examined</param>
+        /// <param name="mass1"></param>
+        /// <param name="mass2"></param>
+        /// <returns></returns>
+        static float GravityPE(float radius, float mass1, float mass2)
+        {
+            float gravitationalConstant = 6.67e-11f; //N*(m/kg)^2
+            return (-gravitationalConstant * mass1 * mass2 / radius);
+        }
+
+        /// <summary>
+        /// Get the force vector for gravity in 2D space using potential energy
+        /// </summary>
+        /// <param name="position">the vector from the center of the object exerting the gravity to the object examined</param>
+        /// <param name="mass1"></param>
+        /// <param name="mass2"></param>
+        /// <param name="arbitrarySmallAmount">can be anything, so long as it is less than the anticipated movement per timestep</param>
+        /// <returns></returns>
+        static Vector3D GravityPEForce2D(Vector3D position, float mass1, float mass2, float arbitrarySmallAmount)
+        {
+            float xDirForce = GravityPE((position.X - arbitrarySmallAmount), mass1, mass2) - GravityPE((position.X + arbitrarySmallAmount), mass1, mass2); //N
+            float yDirForce = GravityPE((position.Y - arbitrarySmallAmount), mass1, mass2) - GravityPE((position.Y + arbitrarySmallAmount), mass1, mass2); //N
+            return new Vector3D(xDirForce, yDirForce);
+        }
+
+        /// <summary>
+        /// Get the force vector for gravity in 3D space using potential energy
+        /// </summary>
+        /// <param name="position">the vector from the center of the object exerting the gravity to the object examined</param>
+        /// <param name="mass1"></param>
+        /// <param name="mass2"></param>
+        /// <param name="arbitrarySmallAmount">can be anything, so long as it is less than the anticipated movement per timestep</param>
+        /// <returns></returns>
+        static Vector3D GravityPEForce3D(Vector3D position, float mass1, float mass2, float arbitrarySmallAmount)
+        {
+            float xDirForce = GravityPE((position.X - arbitrarySmallAmount), mass1, mass2) - GravityPE((position.X + arbitrarySmallAmount), mass1, mass2); //N
+            float yDirForce = GravityPE((position.Y - arbitrarySmallAmount), mass1, mass2) - GravityPE((position.Y + arbitrarySmallAmount), mass1, mass2); //N
+            float zDirForce = GravityPE((position.Z - arbitrarySmallAmount), mass1, mass2) - GravityPE((position.Z + arbitrarySmallAmount), mass1, mass2); //N
+            return new Vector3D(xDirForce, yDirForce, zDirForce);
+        }
+
+        #endregion
 
         #region Force and Motion Lab
 
