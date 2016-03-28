@@ -185,8 +185,8 @@ namespace MPGLabs
         /// <returns></returns>
         static Vector3D GravityPEForce2D(Vector3D position, float mass1, float mass2, float arbitrarySmallAmount)
         {
-            float xDirForce = GravityPE((position.X - arbitrarySmallAmount), mass1, mass2) - GravityPE((position.X + arbitrarySmallAmount), mass1, mass2); //N
-            float yDirForce = GravityPE((position.Y - arbitrarySmallAmount), mass1, mass2) - GravityPE((position.Y + arbitrarySmallAmount), mass1, mass2); //N
+            float xDirForce = (GravityPE((position.X - arbitrarySmallAmount), mass1, mass2) - GravityPE((position.X + arbitrarySmallAmount), mass1, mass2)) / (2 * arbitrarySmallAmount); //N
+            float yDirForce = (GravityPE((position.Y - arbitrarySmallAmount), mass1, mass2) - GravityPE((position.Y + arbitrarySmallAmount), mass1, mass2)) / (2 * arbitrarySmallAmount); //N
             return new Vector3D(xDirForce, yDirForce);
         }
 
@@ -200,9 +200,9 @@ namespace MPGLabs
         /// <returns></returns>
         static Vector3D GravityPEForce3D(Vector3D position, float mass1, float mass2, float arbitrarySmallAmount)
         {
-            float xDirForce = GravityPE((position.X - arbitrarySmallAmount), mass1, mass2) - GravityPE((position.X + arbitrarySmallAmount), mass1, mass2); //N
-            float yDirForce = GravityPE((position.Y - arbitrarySmallAmount), mass1, mass2) - GravityPE((position.Y + arbitrarySmallAmount), mass1, mass2); //N
-            float zDirForce = GravityPE((position.Z - arbitrarySmallAmount), mass1, mass2) - GravityPE((position.Z + arbitrarySmallAmount), mass1, mass2); //N
+            float xDirForce = (GravityPE((position.X - arbitrarySmallAmount), mass1, mass2) - GravityPE((position.X + arbitrarySmallAmount), mass1, mass2)) / (2 * arbitrarySmallAmount); //N
+            float yDirForce = (GravityPE((position.Y - arbitrarySmallAmount), mass1, mass2) - GravityPE((position.Y + arbitrarySmallAmount), mass1, mass2)) / (2 * arbitrarySmallAmount); //N
+            float zDirForce = (GravityPE((position.Z - arbitrarySmallAmount), mass1, mass2) - GravityPE((position.Z + arbitrarySmallAmount), mass1, mass2)) / (2 * arbitrarySmallAmount); //N
             return new Vector3D(xDirForce, yDirForce, zDirForce);
         }
 
