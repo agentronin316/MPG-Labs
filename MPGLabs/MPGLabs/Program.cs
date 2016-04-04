@@ -105,18 +105,19 @@ namespace MPGLabs
             float mass = 100f; //kg
             float timeStep = .05f; //seconds
             float arbitrarySmallAmount = .001f; //m
-            float velocityLossFactor = (float)Math.Sqrt(1f - percentKELossPerStep); //vNew = Sqrt(vOld^2 * (1-loss) = vOld * Sqrt(1 - loss)
+            float velocityLossFactor = (float)Math.Sqrt(1f - percentKELossPerStep); //vNew = Sqrt(vOld^2 * (1 - loss) = vOld * Sqrt(1 - loss)
             float position = 0f; //m
-            float acceleration = ((.3219f * (position - arbitrarySmallAmount) - (.3219f * (position + arbitrarySmallAmount)) * 9.8f / (2f * arbitrarySmallAmount))); //m/(s^2) //netForce / mass
-            float potentialEnergy = 0f; //N
-            float kineticEnergy = 0f; //N
+            float acceleration = ((.3219f * (position + arbitrarySmallAmount) - (.3219f * (position - arbitrarySmallAmount))) * 9.8f / (2f * arbitrarySmallAmount)); //m/(s^2) //netForce / mass
+            float potentialEnergy = (-.3219f * position + 10.0f) * mass * 9.8f; //N
+            float kineticEnergy = mass * velocity * velocity / 2f; //N
+            Console.WriteLine("Potential Energy: {0:N2}N, Kinetic Energy:  {1:N2}N, Total Energy:  {2:N2}N", potentialEnergy, kineticEnergy, potentialEnergy + kineticEnergy);
 
             //start simulation loop
             for (float time = 0; time < 360 && .3219f * position <= 10.0f; time += timeStep) //time is in seconds //run for 6 minutes, or until the box reaches the end of the ramp
             {
                 position += velocity * timeStep; //update position
                 velocity += acceleration * timeStep; //update velocity
-                acceleration = ((.3219f * (position - arbitrarySmallAmount) - (.3219f * (position + arbitrarySmallAmount)) * 9.8f / (2f * arbitrarySmallAmount))); //update acceleration
+                acceleration = ((.3219f * (position + arbitrarySmallAmount) - (.3219f * (position - arbitrarySmallAmount))) * 9.8f / (2f * arbitrarySmallAmount)); //update acceleration
                 velocity = velocity * velocityLossFactor; //account for loss of kinetic energy
                 potentialEnergy = (-.3219f * position + 10.0f) * mass * 9.8f; //calculate potential energy
                 kineticEnergy = mass * velocity * velocity / 2f; //calculate kinetic energy
@@ -141,9 +142,10 @@ namespace MPGLabs
             float speed = velocity.X / 1000f; //km/s
             float totalEnergy = (massOfSpacecraft * speed * speed * 500000f) + GravityPE(position.GetMagnitude(), massOfSpacecraft, massOfEarth); //N
             Vector3D acceleration = inverseMassOfSpacecraft * GravityPEForce2D (position, massOfSpacecraft, massOfEarth, arbitrarySmallAmount); //m/(s^2)
+            Console.WriteLine("Time: {0:N}s, Altitude: {1:N2}km,\nSpeed: {2:N2}km/s,\nTotal energy: {3:N2}N Acceleration: " + acceleration.PrintRect(), 0, altitude, speed, totalEnergy);
 
             //start simulation loop
-            for (int time = 0; time < 200 && position.GetMagnitude() > atmosphereRadius; time += timeStep) //time is in seconds
+            for (int time = 0; time < 36000 && position.GetMagnitude() > atmosphereRadius; time += timeStep) //time is in seconds
             {
                 position += velocity * timeStep; //update position
                 velocity += acceleration * timeStep; //update velocity
@@ -153,7 +155,7 @@ namespace MPGLabs
                 altitude = (position.GetMagnitude() - radiusOfEarth) / 1000f;
                 speed = velocity.GetMagnitude() / 1000f;
                 totalEnergy = (massOfSpacecraft * speed * speed * 500000f) + GravityPE(position.GetMagnitude(), massOfSpacecraft, massOfEarth);
-                Console.WriteLine("Time: {0:N}s, Altitude: {1:N2}km, Speed: {2:N2}km/s, Total energy: {3:N2}N", time, altitude, speed, totalEnergy);
+                Console.WriteLine("Time: {0:N}s, Altitude: {1:N2}km,\nSpeed: {2:N2}km/s,\nTotal energy: {3:N2}N", time, altitude, speed, totalEnergy);
 
             }
             if (position.GetMagnitude() <= atmosphereRadius)
@@ -175,6 +177,7 @@ namespace MPGLabs
             return (-gravitationalConstant * mass1 * mass2 / radius);
         }
 
+        
         /// <summary>
         /// Get the force vector for gravity in 2D space using potential energy
         /// </summary>
@@ -185,8 +188,8 @@ namespace MPGLabs
         /// <returns></returns>
         static Vector3D GravityPEForce2D(Vector3D position, float mass1, float mass2, float arbitrarySmallAmount)
         {
-            float xDirForce = (GravityPE((position.X - arbitrarySmallAmount), mass1, mass2) - GravityPE((position.X + arbitrarySmallAmount), mass1, mass2)) / (2 * arbitrarySmallAmount); //N
-            float yDirForce = (GravityPE((position.Y - arbitrarySmallAmount), mass1, mass2) - GravityPE((position.Y + arbitrarySmallAmount), mass1, mass2)) / (2 * arbitrarySmallAmount); //N
+            float xDirForce = (GravityPE(new Vector3D((position.X - arbitrarySmallAmount), position.Y).GetMagnitude(), mass1, mass2) - GravityPE(new Vector3D((position.X + arbitrarySmallAmount), position.Y).GetMagnitude(), mass1, mass2)) / (2 * arbitrarySmallAmount); //N
+            float yDirForce = (GravityPE(new Vector3D(position.X, (position.Y - arbitrarySmallAmount)).GetMagnitude(), mass1, mass2) - GravityPE(new Vector3D(position.X, (position.Y + arbitrarySmallAmount)).GetMagnitude(), mass1, mass2)) / (2 * arbitrarySmallAmount); //N
             return new Vector3D(xDirForce, yDirForce);
         }
 
@@ -345,7 +348,9 @@ namespace MPGLabs
                 Console.WriteLine("[3]: Rectangular 3D vector input");
                 Console.WriteLine("[4]: Magnitude, Heading, Pitch 3D vector input");
                 Console.WriteLine("[5]: Parallel Projection of a vector onto a second");
-                Console.WriteLine("[6]: Quit");
+                Console.WriteLine("[6]: Cross product of two vectors");
+                Console.WriteLine("[7]: Perpendicular projection");
+                Console.WriteLine("[8]: Quit");
                 Console.Write("Input your selection: ");
                 menuChoice = Console.ReadLine();
 
@@ -366,10 +371,66 @@ namespace MPGLabs
                     case "5":
                         ParallelProjection();
                         break;
+                    case "6":
+                        CrossProduct();
+                        break;
+                    case "7":
+                        PerpendicularProjection();
+                        break;
                 }
                 Console.Write("Press any key to continue...");
                 Console.ReadKey();
-            } while (menuChoice != "6");
+            } while (menuChoice != "8");
+        }
+
+        private static void PerpendicularProjection()
+        {
+            Vector3D vectorOne = Vector3D.zero;
+            Vector3D vectorTwo = Vector3D.zero;
+            Console.Write("Input the x coordinate for the first vector: ");
+            float x = Convert.ToSingle(Console.ReadLine());
+            Console.Write("Input the y coordinate for the first vector: ");
+            float y = Convert.ToSingle(Console.ReadLine());
+            Console.Write("Input the z coordinate for the first vector: ");
+            float z = Convert.ToSingle(Console.ReadLine());
+            vectorOne.SetRectGivenRect(x, y, z);
+            Console.Write("Input the x coordinate for the second vector: ");
+            x = Convert.ToSingle(Console.ReadLine());
+            Console.Write("Input the y coordinate for the second vector: ");
+            y = Convert.ToSingle(Console.ReadLine());
+            Console.Write("Input the z coordinate for the second vector: ");
+            z = Convert.ToSingle(Console.ReadLine());
+            vectorTwo.SetRectGivenRect(x, y, z);
+
+            vectorOne = vectorOne ^ vectorTwo;
+
+            Console.WriteLine(vectorOne.PrintRect());
+
+        }
+
+        private static void CrossProduct()
+        {
+            Vector3D vectorOne = Vector3D.zero;
+            Vector3D vectorTwo = Vector3D.zero;
+            Console.Write("Input the x coordinate for the first vector: ");
+            float x = Convert.ToSingle(Console.ReadLine());
+            Console.Write("Input the y coordinate for the first vector: ");
+            float y = Convert.ToSingle(Console.ReadLine());
+            Console.Write("Input the z coordinate for the first vector: ");
+            float z = Convert.ToSingle(Console.ReadLine());
+            vectorOne.SetRectGivenRect(x, y, z);
+            Console.Write("Input the x coordinate for the second vector: ");
+            x = Convert.ToSingle(Console.ReadLine());
+            Console.Write("Input the y coordinate for the second vector: ");
+            y = Convert.ToSingle(Console.ReadLine());
+            Console.Write("Input the z coordinate for the second vector: ");
+            z = Convert.ToSingle(Console.ReadLine());
+            vectorTwo.SetRectGivenRect(x, y, z);
+
+            vectorOne = vectorOne % vectorTwo;
+
+            Console.WriteLine(vectorOne.PrintRect());
+
         }
 
         private static void ParallelProjection()

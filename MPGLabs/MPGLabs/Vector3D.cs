@@ -40,7 +40,7 @@ namespace MPGLabs
         //    W = 1;
         //}
 
-        public Vector3D(float x, float y, float z = 0)
+        public Vector3D(float x, float y, float z = 0) : this()
         {
             X = x;
             Y = y;
@@ -378,6 +378,22 @@ namespace MPGLabs
         {
             return (u - (u | v));
         }
+
+        /// <summary>
+        /// Cross product of two vectors
+        /// </summary>
+        /// <param name="u"></param>
+        /// <param name="v"></param>
+        /// <returns></returns>
+        public static Vector3D operator %(Vector3D u, Vector3D v)
+        {
+            Vector3D toReturn = zero;
+            toReturn.X = u.Y * v.Z - u.Z * v.Y;
+            toReturn.Y = u.Z * v.X - u.X * v.Z;
+            toReturn.Z = u.X * v.Y - u.Y * v.X;
+            return toReturn;
+        }
+
 
         #endregion
     }
