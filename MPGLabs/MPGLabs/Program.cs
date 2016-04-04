@@ -16,8 +16,8 @@ namespace MPGLabs
                 Console.WriteLine("[3]: Generate Linear Accelerated Motion Files");
                 Console.WriteLine("[4]: Force and Motion Lab");
                 Console.WriteLine("[5]: Work and Energy Lab");
-                Console.WriteLine("[6]: ...");
-                Console.WriteLine("[7]: ...");
+                Console.WriteLine("[6]: Closest Points Lab");
+                Console.WriteLine("[7]: Scaling and Translations Lab");
                 Console.WriteLine("[8]: ...");
                 Console.WriteLine("[9]: ...");
                 Console.WriteLine("[10]: ...");
@@ -43,10 +43,10 @@ namespace MPGLabs
                         WorkAndEnergy();
                         break;
                     case "6":
-                        Console.WriteLine("Not yet implemented.");
+                        ClosestPoints();
                         break;
                     case "7":
-                        Console.WriteLine("Not yet implemented.");
+                        ScalingAndTranslations();
                         break;
                     case "8":
                         Console.WriteLine("Not yet implemented.");
@@ -65,6 +65,293 @@ namespace MPGLabs
                 Console.ReadKey();
             } while (menuChoice != "11");
         }
+
+        #region Scaling and Translations
+
+        static void ScalingAndTranslations()
+        {
+            //Get the inital object positions
+            Console.Write("How many points are on the object? ");
+            Vector3D[] points = new Vector3D[Convert.ToInt32(Console.ReadLine())];
+            float x;
+            float y;
+            float z;
+            for (int i = 0; i < points.Length; i++)
+            {
+                switch (i)
+                {
+                    case 0:
+                        Console.WriteLine("1st point:");
+                        break;
+                    case 1:
+                        Console.WriteLine("2nd point:");
+                        break;
+                    case 2:
+                        Console.WriteLine("3rd point:");
+                        break;
+                    default:
+                        Console.WriteLine((i + 1) + "th point:");
+                        break;
+                }
+                Console.Write("Enter the x coordinate: ");
+                x = Convert.ToSingle(Console.ReadLine());
+                Console.Write("Enter the y coordinate: ");
+                y = Convert.ToSingle(Console.ReadLine());
+                Console.Write("Enter the z coordinate: ");
+                z = Convert.ToSingle(Console.ReadLine());
+                points[i] = new Vector3D(x, y, z);
+            }
+
+            //Do translations until terminated by user
+            string menuChoice;
+            do
+            {
+                Console.Clear();
+                Console.WriteLine("Menu:");
+                Console.WriteLine("[1]: Matrix Translation");
+                Console.WriteLine("[2]: Raw Scaling");
+                Console.WriteLine("[3]: Center Scaling");
+                Console.WriteLine("[4]: Quit");
+                Console.Write("Input your selection: ");
+                menuChoice = Console.ReadLine();
+
+                switch (menuChoice)
+                {
+                    case "1":
+                        TranslationMatrix(ref points);
+                        break;
+                    case "2":
+                        RawScale(ref points);
+                        break;
+                    case "3":
+                        CenterScale(ref points);
+                        break;
+                }
+                Console.Write("Press any key to continue...");
+                Console.ReadKey();
+            } while (menuChoice != "4");
+        }
+
+        static void TranslationMatrix(ref Vector3D[] points)
+        {
+            //Get the translation Vector
+            Console.WriteLine("Translation Vector:");
+            Console.Write("Enter the x coordinate: ");
+            float x = Convert.ToSingle(Console.ReadLine());
+            Console.Write("Enter the y coordinate: ");
+            float y = Convert.ToSingle(Console.ReadLine());
+            Console.Write("Enter the z coordinate: ");
+            float z = Convert.ToSingle(Console.ReadLine());
+            Vector3D translation = new Vector3D(x, y, z);
+
+            //Translate the vertices
+            for (int i = 0; i < points.Length; i++)
+            {
+                points[i] = points[i].TranslateWithMatrix(translation);
+                if (i == points.Length - 1)
+                {
+                    Console.Write(points[i] + ", ");
+                }
+                else
+                {
+                    Console.WriteLine(points[i]);
+                }
+            }
+        }
+
+        static void RawScale(ref Vector3D[] points)
+        {
+            //Get the scaling factors
+            Console.WriteLine("Scaling Factors:");
+            Console.Write("Enter the x direction factor: ");
+            float x = Convert.ToSingle(Console.ReadLine());
+            Console.Write("Enter the y direction factor: ");
+            float y = Convert.ToSingle(Console.ReadLine());
+            Console.Write("Enter the z direction factor: ");
+            float z = Convert.ToSingle(Console.ReadLine());
+            Vector3D scale = new Vector3D(x, y, z);
+
+            //Scale the vertices
+            for (int i = 0; i < points.Length; i++)
+            {
+                points[i] = points[i].RawScaling(scale);
+                if (i == points.Length - 1)
+                {
+                    Console.Write(points[i] + ", ");
+                }
+                else
+                {
+                    Console.WriteLine(points[i]);
+                }
+            }
+        }
+
+        static void CenterScale(ref Vector3D[] points)
+        {
+            //Get the Center point for the scaling
+            Console.WriteLine("Center Point to scale around:");
+            Console.Write("Enter the x coordinate: ");
+            float x = Convert.ToSingle(Console.ReadLine());
+            Console.Write("Enter the y coordinate: ");
+            float y = Convert.ToSingle(Console.ReadLine());
+            Console.Write("Enter the z coordinate: ");
+            float z = Convert.ToSingle(Console.ReadLine());
+            Vector3D center = new Vector3D(x, y, z);
+
+            //Get the scaling factors
+            Console.WriteLine("Scaling Factors:");
+            Console.Write("Enter the x direction factor: ");
+            x = Convert.ToSingle(Console.ReadLine());
+            Console.Write("Enter the y direction factor: ");
+            y = Convert.ToSingle(Console.ReadLine());
+            Console.Write("Enter the z direction factor: ");
+            z = Convert.ToSingle(Console.ReadLine());
+            Vector3D scale = new Vector3D(x, y, z);
+
+            //Scale the vertices
+            for (int i = 0; i < points.Length; i++)
+            {
+                points[i] = points[i].CenterScaling(scale, center);
+                if (i == points.Length - 1)
+                {
+                    Console.Write(points[i] + ", ");
+                }
+                else
+                {
+                    Console.WriteLine(points[i]);
+                }
+            }
+        }
+
+
+
+
+        #endregion
+
+        #region Closest Points
+
+        static void ClosestPoints()
+        {
+            string menuChoice;
+            do
+            {
+                Console.Clear();
+                Console.WriteLine("Menu:");
+                Console.WriteLine("[1]: Moving Object Closest Approach");
+                Console.WriteLine("[2]: Closest Point on a Surface");
+                Console.WriteLine("[3]: Quit");
+                Console.Write("Input your selection: ");
+                menuChoice = Console.ReadLine();
+
+                switch (menuChoice)
+                {
+                    case "1":
+                        ClosestLine();
+                        break;
+                    case "2":
+                        ClosestPlane();
+                        break;
+                }
+                Console.Write("Press any key to continue...");
+                Console.ReadKey();
+            } while (menuChoice != "3");
+        }
+
+        static void ClosestLine()
+        {
+            //Collect data from user
+            Console.Write("Enter the x coordinate of the ship (km): ");
+            float x = Convert.ToSingle(Console.ReadLine());
+            Console.Write("Enter the y coordinate of the ship (km): ");
+            float y = Convert.ToSingle(Console.ReadLine());
+            Console.Write("Enter the z coordinate of the ship (km): ");
+            float z = Convert.ToSingle(Console.ReadLine());
+            Vector3D ship = new Vector3D(x, y, z); //km
+            Console.Write("Enter the x coordinate of the meteor (km): ");
+            x = Convert.ToSingle(Console.ReadLine());
+            Console.Write("Enter the y coordinate of the meteor (km): ");
+            y = Convert.ToSingle(Console.ReadLine());
+            Console.Write("Enter the z coordinate of the meteor (km): ");
+            z = Convert.ToSingle(Console.ReadLine());
+            Vector3D meteor = new Vector3D(x, y, z); //km
+            Console.Write("Enter the x coordinate of the meteor's trajectory (km/s): ");
+            x = Convert.ToSingle(Console.ReadLine());
+            Console.Write("Enter the y coordinate of the meteor's trajectory (km/s): ");
+            y = Convert.ToSingle(Console.ReadLine());
+            Console.Write("Enter the z coordinate of the meteor's trajectory (km/s): ");
+            z = Convert.ToSingle(Console.ReadLine());
+            Vector3D trajectory = new Vector3D(x, y, z); //km/s
+
+            //The mathening
+            Vector3D closestPoint = ship.ClosestPointLine(meteor, trajectory);
+
+            //Output
+            Console.WriteLine("Closest Point is: " + closestPoint + " km"); //km, the closest point on the line
+            Console.WriteLine("Distance of closest approach is: {0:N2} km", (closestPoint - ship).GetMagnitude());
+        }
+
+        static void ClosestPlane()
+        {
+            //Collect data from user
+            Console.Write("Enter the x coordinate of the ship (km): ");
+            float x = Convert.ToSingle(Console.ReadLine());
+            Console.Write("Enter the y coordinate of the ship (km): ");
+            float y = Convert.ToSingle(Console.ReadLine());
+            Console.Write("Enter the z coordinate of the ship (km): ");
+            float z = Convert.ToSingle(Console.ReadLine());
+            Vector3D ship = new Vector3D(x, y, z); //km
+            Console.WriteLine("First planar point:");
+            Console.Write("Enter the x coordinate (km): ");
+            x = Convert.ToSingle(Console.ReadLine());
+            Console.Write("Enter the y coordinate (km): ");
+            y = Convert.ToSingle(Console.ReadLine());
+            Console.Write("Enter the z coordinate (km): ");
+            z = Convert.ToSingle(Console.ReadLine());
+            Vector3D point1 = new Vector3D(x, y, z); //km
+            Console.WriteLine("Second planar point:");
+            Console.Write("Enter the x coordinate (km): ");
+            x = Convert.ToSingle(Console.ReadLine());
+            Console.Write("Enter the y coordinate (km): ");
+            y = Convert.ToSingle(Console.ReadLine());
+            Console.Write("Enter the z coordinate (km): ");
+            z = Convert.ToSingle(Console.ReadLine());
+            Vector3D point2 = new Vector3D(x, y, z); //km
+            Console.WriteLine("Third planar point:");
+            Console.Write("Enter the x coordinate (km): ");
+            x = Convert.ToSingle(Console.ReadLine());
+            Console.Write("Enter the y coordinate (km): ");
+            y = Convert.ToSingle(Console.ReadLine());
+            Console.Write("Enter the z coordinate (km): ");
+            z = Convert.ToSingle(Console.ReadLine());
+            Vector3D point3 = new Vector3D(x, y, z); //km
+
+            if (point1 == point2 || point2 == point3 || point3 == point1) //check if points are the same
+            {
+                Console.WriteLine("Error: Redundant points entered.");
+            }
+            else
+            {
+                //The mathening
+                Vector3D point1To2 = point2 - point1; //km, one vector within the plane
+                Vector3D point1To3 = point3 - point1; //km, another vector within the plane
+
+                if ((!point1To2) == (!point1To3) || (!point1To2) == -1 * (!point1To3)) //check if points are on a single line
+                {
+                    Console.WriteLine("Error: Collinear points entered.");
+                }
+                else
+                {
+                    Vector3D normal = !(point1To2 % point1To3); //the planar normal, normalized to remove units
+                    Vector3D closestPoint = ship.ClosestPointPlane(point1, normal); //km, the closest point on the plane
+
+                    //Output
+                    Console.WriteLine("Closest Point is: " + closestPoint + " km");
+                    Console.WriteLine("Distance of closest approach is: {0:N2} km", (closestPoint - ship).GetMagnitude());
+                }
+            }
+        }
+
+        #endregion
 
         #region Work and Energy
 

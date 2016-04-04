@@ -40,12 +40,12 @@ namespace MPGLabs
         //    W = 1;
         //}
 
-        public Vector3D(float x, float y, float z = 0) : this()
+        public Vector3D(float x, float y, float z = 0, float w = 1) : this()
         {
             X = x;
             Y = y;
             Z = z;
-            W = 1;
+            W = w;
         }
 
         /// <summary>
@@ -226,6 +226,89 @@ namespace MPGLabs
         public float GetGamma()
         {
             return GetMagnitude() == 0 ? 0f : Rad2Deg((float)(Math.Acos(Z / GetMagnitude())));
+        }
+
+        #endregion
+
+        #region ClosestPointsLab
+
+        /// <summary>
+        /// Get the point on a line closest to the position calling it
+        /// </summary>
+        /// <param name="linePoint"> a point on the line</param>
+        /// <param name="lineDirection">a vector describing the direction of the line</param>
+        /// <returns>the point on the line that is closest to the Vector3D calling the function</returns>
+        public Vector3D ClosestPointLine(Vector3D linePoint, Vector3D lineDirection)
+        {
+            Vector3D pointToObject = this - linePoint;
+            return (pointToObject | lineDirection) + linePoint;
+        }
+
+        /// <summary>
+        /// Get the point on a plane closest to the position calling it
+        /// </summary>
+        /// <param name="planarPoint">a point on the plane</param>
+        /// <param name="planarNormal">a vector perpendicular to the plane</param>
+        /// <returns>the point on the plane that is closest to the Vector3D calling the function</returns>
+        public Vector3D ClosestPointPlane(Vector3D planarPoint, Vector3D planarNormal)
+        {
+            Vector3D pointToObject = this - planarPoint;
+            return (pointToObject ^ planarNormal) + planarPoint;
+        }
+
+        public override string ToString()
+        {
+            return PrintRect();
+        }
+
+        #endregion
+
+        #region ScalingAndTranslations
+
+        /// <summary>
+        /// Dot product using all four values
+        /// </summary>
+        /// <param name="other"></param>
+        /// <returns></returns>
+        public float Dot4(Vector3D other)
+        {
+            return (this * other + W * other.W);
+        }
+
+        public Vector3D TranslateWithMatrix(Vector3D translation)
+        {
+            //Create Matrix
+            Vector3D[] matrix = new Vector3D[4];
+            matrix[0] = new Vector3D(1, 0, 0, translation.X);
+            matrix[1] = new Vector3D(0, 1, 0, translation.Y);
+            matrix[2] = new Vector3D(0, 0, 1, translation.Z);
+            matrix[3] = new Vector3D(0, 0, 0, 1);
+            //Matrix Multiplication
+            return new Vector3D(Dot4(matrix[0]), Dot4(matrix[1]), Dot4(matrix[2]), Dot4(matrix[3]));
+        }
+
+        public Vector3D RawScaling(Vector3D scale)
+        {
+            //Create Matrix
+            Vector3D[] matrix = new Vector3D[4];
+            matrix[0] = new Vector3D(scale.X, 0, 0, 0);
+            matrix[1] = new Vector3D(0, scale.Y, 0, 0);
+            matrix[2] = new Vector3D(0, 0, scale.Z, 0);
+            matrix[3] = new Vector3D(0, 0, 0, 1);
+            //Matrix Multiplication
+            return new Vector3D(Dot4(matrix[0]), Dot4(matrix[1]), Dot4(matrix[2]), Dot4(matrix[3]));
+        }
+
+        public Vector3D CenterScaling(Vector3D scale, Vector3D center)
+        {
+            //Create Matrix
+            Vector3D[] matrix = new Vector3D[4];
+            matrix[0] = new Vector3D(scale.X, 0, 0, center.X * (1 - scale.X));
+            matrix[1] = new Vector3D(0, scale.Y, 0, center.Y * (1 - scale.Y));
+            matrix[2] = new Vector3D(0, 0, scale.Z, center.Z * (1 - scale.Z));
+            matrix[3] = new Vector3D(0, 0, 0, 1);
+            //Matrix Multiplication
+            return new Vector3D(Dot4(matrix[0]), Dot4(matrix[1]), Dot4(matrix[2]), Dot4(matrix[3]));
         }
 
         #endregion
