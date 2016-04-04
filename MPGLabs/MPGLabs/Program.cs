@@ -148,9 +148,9 @@ namespace MPGLabs
             for (int i = 0; i < points.Length; i++)
             {
                 points[i] = points[i].TranslateWithMatrix(translation);
-                if (i == points.Length - 1)
+                if (i != points.Length - 1)
                 {
-                    Console.Write(points[i] + ", ");
+                    Console.WriteLine(points[i] + ", ");
                 }
                 else
                 {
@@ -175,9 +175,9 @@ namespace MPGLabs
             for (int i = 0; i < points.Length; i++)
             {
                 points[i] = points[i].RawScaling(scale);
-                if (i == points.Length - 1)
+                if (i != points.Length - 1)
                 {
-                    Console.Write(points[i] + ", ");
+                    Console.WriteLine(points[i] + ", ");
                 }
                 else
                 {
@@ -212,9 +212,9 @@ namespace MPGLabs
             for (int i = 0; i < points.Length; i++)
             {
                 points[i] = points[i].CenterScaling(scale, center);
-                if (i == points.Length - 1)
+                if (i != points.Length - 1)
                 {
-                    Console.Write(points[i] + ", ");
+                    Console.WriteLine(points[i] + ", ");
                 }
                 else
                 {
@@ -283,10 +283,10 @@ namespace MPGLabs
             Vector3D trajectory = new Vector3D(x, y, z); //km/s
 
             //The mathening
-            Vector3D closestPoint = ship.ClosestPointLine(meteor, trajectory);
+            Vector3D closestPoint = ship.ClosestPointLine(meteor, trajectory); //km, the closest point on the line
 
             //Output
-            Console.WriteLine("Closest Point is: " + closestPoint + " km"); //km, the closest point on the line
+            Console.WriteLine("Closest Point is: " + closestPoint + " km");
             Console.WriteLine("Distance of closest approach is: {0:N2} km", (closestPoint - ship).GetMagnitude());
         }
 
