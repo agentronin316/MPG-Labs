@@ -18,7 +18,7 @@ namespace MPGLabs
                 Console.WriteLine("[5]: Work and Energy Lab");
                 Console.WriteLine("[6]: Closest Points Lab");
                 Console.WriteLine("[7]: Scaling and Translations Lab");
-                Console.WriteLine("[8]: ...");
+                Console.WriteLine("[8]: Collisions and Momentum Lab");
                 Console.WriteLine("[9]: ...");
                 Console.WriteLine("[10]: ...");
                 Console.WriteLine("[11]: Quit");
@@ -49,7 +49,7 @@ namespace MPGLabs
                         ScalingAndTranslations();
                         break;
                     case "8":
-                        Console.WriteLine("Not yet implemented.");
+                        CollisionsAndMomentum();
                         break;
                     case "9":
                         Console.WriteLine("Not yet implemented.");
@@ -65,6 +65,97 @@ namespace MPGLabs
                 Console.ReadKey();
             } while (menuChoice != "11");
         }
+
+        #region Collisions and Momentum
+
+        static void CollisionsAndMomentum()
+        {
+            string menuChoice;
+            do
+            {
+                Console.Clear();
+                Console.WriteLine("Menu:");
+                Console.WriteLine("[1]: Reflection off of a plane");
+                Console.WriteLine("[2]: Collision in 1D");
+                Console.WriteLine("[3]: Quit");
+                Console.Write("Input your selection: ");
+                menuChoice = Console.ReadLine();
+
+                switch (menuChoice)
+                {
+                    case "1":
+                        PlaneReflection();
+                        break;
+                    case "2":
+                        Collision1D();
+                        break;
+                }
+                Console.Write("Press any key to continue...");
+                Console.ReadKey();
+            } while (menuChoice != "3");
+        }
+
+        static void PlaneReflection()
+        {
+            //Collect User input
+            Console.Write("Enter the coefficient of restitution: ");
+            float coefficientOfRestitution = Convert.ToSingle(Console.ReadLine());
+            Console.Write("Enter the x-component of the initial velocity: ");
+            float x = Convert.ToSingle(Console.ReadLine());
+            Console.Write("Enter the y-component of the initial velocity: ");
+            float y = Convert.ToSingle(Console.ReadLine());
+            Console.Write("Enter the z-component of the initial velocity: ");
+            float z = Convert.ToSingle(Console.ReadLine());
+            Vector3D velocity = new Vector3D(x, y, z);
+            Console.Write("Enter the x-component of the first planar vector: ");
+            x = Convert.ToSingle(Console.ReadLine());
+            Console.Write("Enter the y-component of the first planar vector: ");
+            y = Convert.ToSingle(Console.ReadLine());
+            Console.Write("Enter the z-component of the first planar vector: ");
+            z = Convert.ToSingle(Console.ReadLine());
+            Vector3D plane1 = new Vector3D(x, y, z);
+            Console.Write("Enter the x-component of the second planar vector: ");
+            x = Convert.ToSingle(Console.ReadLine());
+            Console.Write("Enter the y-component of the second planar vector: ");
+            y = Convert.ToSingle(Console.ReadLine());
+            Console.Write("Enter the z-component of the second planar vector: ");
+            z = Convert.ToSingle(Console.ReadLine());
+            Vector3D plane2 = new Vector3D(x, y, z);
+
+            //get the normalized planar normal
+            Vector3D normal = !(plane1 % plane2);
+
+            //Get the final velocity
+            Vector3D finalVelocity = velocity - ((1 + coefficientOfRestitution) * (normal * velocity)) * normal;
+            //Display the final velocity
+            Console.WriteLine("New velocity is " + finalVelocity.ToString());
+        }
+
+        static void Collision1D()
+        {
+            //Collect user input
+            Console.Write("Enter the coefficient of restitution: ");
+            float coefficientOfRestitution = Convert.ToSingle(Console.ReadLine());
+            Console.Write("Enter the mass of the first object: ");
+            float mass1 = Convert.ToSingle(Console.ReadLine());
+            Console.Write("Enter the velocity of the first object: ");
+            float velocity1 = Convert.ToSingle(Console.ReadLine());
+            Console.Write("Enter the mass of the second object: ");
+            float mass2 = Convert.ToSingle(Console.ReadLine());
+            Console.Write("Enter the velocity of the second object: ");
+            float velocity2 = Convert.ToSingle(Console.ReadLine());
+
+            //Calculate the final velocities
+            float finalVelocity2 = (velocity1 * mass1 * (1 + coefficientOfRestitution) + velocity2 * (mass2 - mass1 * coefficientOfRestitution))
+                                    / (mass1 + mass2);
+            float finalVelocity1 = finalVelocity2 + coefficientOfRestitution * (velocity2 - velocity1);
+
+            Console.WriteLine("The first object ends up with a velocity of " + finalVelocity1);
+            Console.WriteLine("The second object ends up with a velocity of " + finalVelocity2);
+
+        }
+
+        #endregion
 
         #region Scaling and Translations
 
