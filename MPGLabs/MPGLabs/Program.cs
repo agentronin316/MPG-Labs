@@ -19,9 +19,10 @@ namespace MPGLabs
                 Console.WriteLine("[6]: Closest Points Lab");
                 Console.WriteLine("[7]: Scaling and Translations Lab");
                 Console.WriteLine("[8]: Collisions and Momentum Lab");
-                Console.WriteLine("[9]: ...");
+                Console.WriteLine("[9]: Rotations Lab");
                 Console.WriteLine("[10]: ...");
-                Console.WriteLine("[11]: Quit");
+                Console.WriteLine("[11]: ...");
+                Console.WriteLine("[12]: Quit");
                 Console.Write("Input your selection: ");
                 menuChoice = Console.ReadLine();
 
@@ -52,19 +53,153 @@ namespace MPGLabs
                         CollisionsAndMomentum();
                         break;
                     case "9":
-                        Console.WriteLine("Not yet implemented.");
+                        Rotations();
                         break;
                     case "10":
                         Console.WriteLine("Not yet implemented.");
                         break;
                     case "11":
+                        Console.WriteLine("Not yet implemented.");
+                        break;
+                    case "12":
                         Console.WriteLine("Goodbye.");
                         break;
                 }
                 Console.Write("Press any key to continue...");
                 Console.ReadKey();
-            } while (menuChoice != "11");
+            } while (menuChoice != "12");
         }
+
+        #region Rotations
+
+        static void Rotations()
+        {
+            //Get the initial object positions
+            Console.Write("How many points are on the object? ");
+            Vector3D[] points = new Vector3D[Convert.ToInt32(Console.ReadLine())];
+            float x;
+            float y;
+            float z;
+            for (int i = 0; i < points.Length; i++)
+            {
+                switch (i)
+                {
+                    case 0:
+                        Console.WriteLine("1st point:");
+                        break;
+                    case 1:
+                        Console.WriteLine("2nd point:");
+                        break;
+                    case 2:
+                        Console.WriteLine("3rd point:");
+                        break;
+                    default:
+                        Console.WriteLine((i + 1) + "th point:");
+                        break;
+                }
+                Console.Write("Enter the x coordinate: ");
+                x = Convert.ToSingle(Console.ReadLine());
+                Console.Write("Enter the y coordinate: ");
+                y = Convert.ToSingle(Console.ReadLine());
+                Console.Write("Enter the z coordinate: ");
+                z = Convert.ToSingle(Console.ReadLine());
+                points[i] = new Vector3D(x, y, z);
+            }
+
+            //Do translations until terminated by user
+            string menuChoice;
+            do
+            {
+                Console.Clear();
+                Console.WriteLine("Menu:");
+                Console.WriteLine("[1]: Rotation around the x-axis");
+                Console.WriteLine("[2]: Rotation around the y-axis");
+                Console.WriteLine("[3]: Rotation around the z-axis");
+                Console.WriteLine("[4]: Quit");
+                Console.Write("Input your selection: ");
+                menuChoice = Console.ReadLine();
+
+                switch (menuChoice)
+                {
+                    case "1":
+                        RotationX(ref points);
+                        break;
+                    case "2":
+                        RotationY(ref points);
+                        break;
+                    case "3":
+                        RotationZ(ref points);
+                        break;
+                }
+                Console.Write("Press any key to continue...");
+                Console.ReadKey();
+            } while (menuChoice != "4");
+        }
+
+        static void RotationX(ref Vector3D[] points)
+        {
+            //Get the angle of rotation
+            Console.Write("Enter the angle of rotation (in degrees): ");
+            float angle = Convert.ToSingle(Console.ReadLine()); //degrees
+
+            //Translate the vertices
+            for (int i = 0; i < points.Length; i++)
+            {
+                points[i] = points[i].RotationAroundX(angle);
+                if (i != points.Length - 1)
+                {
+                    Console.WriteLine(points[i] + ", ");
+                }
+                else
+                {
+                    Console.WriteLine(points[i]);
+                }
+            }
+        }
+
+        static void RotationY(ref Vector3D[] points)
+        {
+            //Get the angle of rotation
+            Console.Write("Enter the angle of rotation (in degrees): ");
+            float angle = Convert.ToSingle(Console.ReadLine());
+
+            //Translate the vertices
+            for (int i = 0; i < points.Length; i++)
+            {
+                points[i] = points[i].RotationAroundY(angle);
+                if (i != points.Length - 1)
+                {
+                    Console.WriteLine(points[i] + ", ");
+                }
+                else
+                {
+                    Console.WriteLine(points[i]);
+                }
+            }
+        }
+
+        static void RotationZ(ref Vector3D[] points)
+        {
+            //Get the angle of rotation
+            Console.Write("Enter the angle of rotation (in degrees): ");
+            float angle = Convert.ToSingle(Console.ReadLine());
+
+            //Translate the vertices
+            for (int i = 0; i < points.Length; i++)
+            {
+                points[i] = points[i].RotationAroundZ(angle);
+                if (i != points.Length - 1)
+                {
+                    Console.WriteLine(points[i] + ", ");
+                }
+                else
+                {
+                    Console.WriteLine(points[i]);
+                }
+            }
+        }
+
+        #endregion
 
         #region Collisions and Momentum
 
@@ -152,7 +287,6 @@ namespace MPGLabs
 
             Console.WriteLine("The first object ends up with a velocity of " + finalVelocity1);
             Console.WriteLine("The second object ends up with a velocity of " + finalVelocity2);
-
         }
 
         #endregion
@@ -161,7 +295,7 @@ namespace MPGLabs
 
         static void ScalingAndTranslations()
         {
-            //Get the inital object positions
+            //Get the initial object positions
             Console.Write("How many points are on the object? ");
             Vector3D[] points = new Vector3D[Convert.ToInt32(Console.ReadLine())];
             float x;

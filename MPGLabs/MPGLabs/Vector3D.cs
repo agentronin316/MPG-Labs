@@ -31,6 +31,76 @@ namespace MPGLabs
             return radians * RAD_TO_DEG;
         }
 
+        #region RotationsLab
+
+        /// <summary>
+        /// Rotate the Vector around the x-axis
+        /// </summary>
+        /// <param name="angle">Angle of rotation in degrees</param>
+        /// <returns>Vector3D after the rotation</returns>
+        public Vector3D RotationAroundX(float angle)
+        {
+            //Convert angle to radians and calculate sine & cosine
+            angle = Deg2Rad(angle); //radians
+            float cosTheta = (float)Math.Cos(angle); //distance ratio, arbitrary unit
+            float sinTheta = (float)Math.Sin(angle); //distance ratio, arbitrary unit
+
+            //Create Matrix
+            Vector3D[] matrix = new Vector3D[4];
+            matrix[0] = new Vector3D(1, 0, 0, 0);
+            matrix[1] = new Vector3D(0, cosTheta, -sinTheta, 0);
+            matrix[2] = new Vector3D(0, sinTheta, cosTheta, 0);
+            matrix[3] = new Vector3D(0, 0, 0, 1);
+            //Matrix Multiplication
+            return new Vector3D(Dot4(matrix[0]), Dot4(matrix[1]), Dot4(matrix[2]), Dot4(matrix[3]));
+        }
+
+        /// <summary>
+        /// Rotate the Vector around the y-axis
+        /// </summary>
+        /// <param name="angle">Angle of rotation in degrees</param>
+        /// <returns>Vector3D after the rotation</returns>
+        public Vector3D RotationAroundY(float angle)
+        {
+            //Convert angle to radians and calculate sine & cosine
+            angle = Deg2Rad(angle); //radians
+            float cosTheta = (float)Math.Cos(angle); //distance ratio, arbitrary unit
+            float sinTheta = (float)Math.Sin(angle); //distance ratio, arbitrary unit
+
+            //Create Matrix
+            Vector3D[] matrix = new Vector3D[4];
+            matrix[0] = new Vector3D(cosTheta, 0, sinTheta, 0);
+            matrix[1] = new Vector3D(0, 1, 0, 0);
+            matrix[2] = new Vector3D(-sinTheta, 0, cosTheta, 0);
+            matrix[3] = new Vector3D(0, 0, 0, 1);
+            //Matrix Multiplication
+            return new Vector3D(Dot4(matrix[0]), Dot4(matrix[1]), Dot4(matrix[2]), Dot4(matrix[3]));
+        }
+
+        /// <summary>
+        /// Rotate the Vector around the z-axis
+        /// </summary>
+        /// <param name="angle">Angle of rotation in degrees</param>
+        /// <returns>Vector3D after the rotation</returns>
+        public Vector3D RotationAroundZ(float angle)
+        {
+            //Convert angle to radians and calculate sine & cosine
+            angle = Deg2Rad(angle); //radians
+            float cosTheta = (float)Math.Cos(angle); //distance ratio, arbitrary unit
+            float sinTheta = (float)Math.Sin(angle); //distance ratio, arbitrary unit
+
+            //Create Matrix
+            Vector3D[] matrix = new Vector3D[4];
+            matrix[0] = new Vector3D(cosTheta, -sinTheta, 0, 0);
+            matrix[1] = new Vector3D(sinTheta, cosTheta, 0, 0);
+            matrix[2] = new Vector3D(0, 0, 1, 0);
+            matrix[3] = new Vector3D(0, 0, 0, 1);
+            //Matrix Multiplication
+            return new Vector3D(Dot4(matrix[0]), Dot4(matrix[1]), Dot4(matrix[2]), Dot4(matrix[3]));
+        }
+
+        #endregion
+
         #region VectorLab
 
         //public Vector3D()
