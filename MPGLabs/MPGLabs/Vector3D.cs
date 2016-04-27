@@ -549,5 +549,19 @@ namespace MPGLabs
 
 
         #endregion
+
+        #region Misc Struct Requirements
+
+        public override bool Equals(object obj)
+        {
+            return (obj is Vector3D) && (this == (Vector3D)obj);
+        }
+
+        public override int GetHashCode()
+        {
+            return (int)X + (int)Y % 10 - (int)Z * 2;
+        }
+
+        #endregion
     }
 }

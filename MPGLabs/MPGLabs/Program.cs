@@ -21,7 +21,7 @@ namespace MPGLabs
                 Console.WriteLine("[8]: Collisions and Momentum Lab");
                 Console.WriteLine("[9]: Rotations Lab");
                 Console.WriteLine("[10]: ...");
-                Console.WriteLine("[11]: ...");
+                Console.WriteLine("[11]: Quaternion Rotations Lab");
                 Console.WriteLine("[12]: Quit");
                 Console.Write("Input your selection: ");
                 menuChoice = Console.ReadLine();
@@ -59,7 +59,7 @@ namespace MPGLabs
                         Console.WriteLine("Not yet implemented.");
                         break;
                     case "11":
-                        Console.WriteLine("Not yet implemented.");
+                        QuaternionRotations();
                         break;
                     case "12":
                         Console.WriteLine("Goodbye.");
@@ -69,6 +69,104 @@ namespace MPGLabs
                 Console.ReadKey();
             } while (menuChoice != "12");
         }
+
+        #region Quaternion Rotations
+
+        static void QuaternionRotations()
+        {
+            string menuChoice;
+            do
+            {
+                Console.Clear();
+                Console.WriteLine("Menu:");
+                Console.WriteLine("[1]: Quaternion Math");
+                Console.WriteLine("[2]: Rotating with Quaternions");
+                Console.WriteLine("[3]: Quit");
+                Console.Write("Input your selection: ");
+                menuChoice = Console.ReadLine();
+
+                switch (menuChoice)
+                {
+                    case "1":
+                        QuaternionMath();
+                        break;
+                    case "2":
+                        RotatingWithQuaternions();
+                        break;
+                }
+                Console.Write("Press any key to continue...");
+                Console.ReadKey();
+            } while (menuChoice != "3");
+        }
+
+        static void QuaternionMath()
+        {
+            //Collect user input, All units are arbitrary
+            Console.Write("Enter a scalar value: ");
+            float scalar = Convert.ToSingle(Console.ReadLine());
+            Console.WriteLine("Enter the first quaternion:");
+            Console.Write("Scalar component: ");
+            float w = Convert.ToSingle(Console.ReadLine());
+            Console.Write("Vector-x component: ");
+            float x = Convert.ToSingle(Console.ReadLine());
+            Console.Write("Vector-y component: ");
+            float y = Convert.ToSingle(Console.ReadLine());
+            Console.Write("Vector-z component: ");
+            float z = Convert.ToSingle(Console.ReadLine());
+            Quaternion first = new Quaternion(w, x, y, z);
+            Console.WriteLine("Enter the second quaternion:");
+            Console.Write("Scalar component: ");
+            w = Convert.ToSingle(Console.ReadLine());
+            Console.Write("Vector-x component: ");
+            x = Convert.ToSingle(Console.ReadLine());
+            Console.Write("Vector-y component: ");
+            y = Convert.ToSingle(Console.ReadLine());
+            Console.Write("Vector-z component: ");
+            z = Convert.ToSingle(Console.ReadLine());
+            Quaternion second = new Quaternion(w, x, y, z);
+
+            //Display output
+            Console.WriteLine("Sum: " + (first + second));
+            Console.WriteLine("Difference: " + (first - second));
+            Console.WriteLine("Scalar multiplication: " + (scalar * first) + " and " + (scalar * second));
+            Console.WriteLine("Quaternion multipliation: " + (first * second));
+            Console.WriteLine("Magnitudes: " + first.GetMagnitude() + " and " + second.GetMagnitude());
+            Console.WriteLine("Conjugates: " + first.GetConjugate() + " and " + second.GetConjugate());
+            Console.WriteLine("Inverses: " + first.GetInverse() + " and " + second.GetInverse());
+        }
+
+        static void RotatingWithQuaternions()
+        {
+            //Collect user input
+            Console.WriteLine("Enter a point:");
+            Console.Write("X-coordinate: ");
+            float x = Convert.ToSingle(Console.ReadLine());
+            Console.Write("Y-coordinate: ");
+            float y = Convert.ToSingle(Console.ReadLine());
+            Console.Write("Z-coordinate: ");
+            float z = Convert.ToSingle(Console.ReadLine());
+            Quaternion point = new Quaternion(0, x, y, z);
+            Console.WriteLine("Enter a standard position vector to rotate around:");
+            Console.Write("X component: ");
+            x = Convert.ToSingle(Console.ReadLine());
+            Console.Write("Y component: ");
+            y = Convert.ToSingle(Console.ReadLine());
+            Console.Write("Z component: ");
+            z = Convert.ToSingle(Console.ReadLine());
+            Quaternion axis = new Quaternion(0, x, y, z);
+            Console.Write("Enter an angle in degrees to rotate the point by: ");
+            float angle = Convert.ToSingle(Console.ReadLine()); //Degrees
+
+            //Do the rotation
+            Quaternion newPoint = point.Rotation(axis, angle);
+            Vector3D output = new Vector3D(newPoint.X, newPoint.Y, newPoint.Z);
+            Console.WriteLine("New point as a Quaternion: " + newPoint);
+            Console.WriteLine("New point as a Vector: " + output);
+
+
+        }
+
+        #endregion
 
         #region Rotations
 
