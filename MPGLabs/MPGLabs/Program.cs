@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 
 namespace MPGLabs
 {
@@ -20,7 +21,7 @@ namespace MPGLabs
                 Console.WriteLine("[7]: Scaling and Translations Lab");
                 Console.WriteLine("[8]: Collisions and Momentum Lab");
                 Console.WriteLine("[9]: Rotations Lab");
-                Console.WriteLine("[10]: ...");
+                Console.WriteLine("[10]: Rotational Dynamics Lab");
                 Console.WriteLine("[11]: Quaternion Rotations Lab");
                 Console.WriteLine("[12]: Quit");
                 Console.Write("Input your selection: ");
@@ -56,7 +57,7 @@ namespace MPGLabs
                         Rotations();
                         break;
                     case "10":
-                        Console.WriteLine("Not yet implemented.");
+                        RotationalDynamics();
                         break;
                     case "11":
                         QuaternionRotations();
@@ -163,6 +164,76 @@ namespace MPGLabs
             Console.WriteLine("New point as a Quaternion: " + newPoint);
             Console.WriteLine("New point as a Vector: " + output);
 
+
+        }
+
+        #endregion
+
+        #region Rotational Dynamics
+
+        static void RotationalDynamics()
+        {
+            //Giant block o' pre-defined variables
+            float rotation = 0; // rad
+            float angularVelocity = 0f; // rad/s
+            float angularAcceleration = 0; // rad/(s^2)
+            float momentOfInertia = .11809f; // kg*(m^2)
+            float time = 0; // s
+            float deltaTime = .01f; // s
+            int reportingFrequency = 10; // timesteps
+            Vector3D position = Vector3D.zero; // m
+            Vector3D linearVelocity = Vector3D.zero; // m/s
+            Vector3D linearAcceleration = Vector3D.zero; // m/(s^2)
+            Vector3D massOneLocalPosition = new Vector3D(-.28f, 0f); //m
+            Vector3D massTwoLocalPosition = new Vector3D(.07f, 0f); //m
+
+
+            //Collect user input
+            Console.Write("Input the magnitude of the force in Newtons: ");
+            Vector3D force = new Vector3D(); // N
+            force.SetRectGivenMagHeadPitch(Convert.ToSingle(Console.ReadLine()), 30); //Set the rectangular coordinates of the force vector
+            Console.Write("Input the number of seconds the force will be applied for: ");
+            float forceDuration = Convert.ToSingle(Console.ReadLine()); // s
+            linearAcceleration = force * (1 / 6.1f);
+            float torque = massOneLocalPosition.X * force.Y - massOneLocalPosition.Y * force.X; // N*m
+            angularAcceleration = torque / momentOfInertia;
+            Vector3D massOneRotated = Vector3D.zero; // m
+            Vector3D massTwoRotated = Vector3D.zero; // m
+            using (StreamWriter writer = new StreamWriter("..\\..\\rotationalDynamics.csv"))
+            {
+                while (time <= forceDuration)
+                {
+                    for (int i = 0; i < reportingFrequency && time <= forceDuration; i++)
+                    {
+                        //increment time
+                        time += deltaTime;
+                        //update position & rotation
+                        position += linearVelocity * deltaTime;
+                        rotation += angularVelocity * deltaTime;
+                        //update velocities
+                        linearVelocity += linearAcceleration * deltaTime;
+                        angularVelocity += angularAcceleration * deltaTime;
+                        //calculate mass positions relative to center of mass
+                        massOneRotated = massOneLocalPosition.RotationAroundZ(Vector3D.Rad2Deg(rotation));
+                        massTwoRotated = massTwoLocalPosition.RotationAroundZ(Vector3D.Rad2Deg(rotation));
+                        //recalculate torque
+                        torque = massOneRotated.X * force.Y - massOneRotated.Y * force.X;
+                        //update angularAcceleration
+                        angularAcceleration = torque / momentOfInertia;
+                        //write data to file
+                        writer.WriteLine(rotation + "," + position.X + "," + position.Y + "," + 
+                                        (position.X + massOneRotated.X) + "," + (position.Y + massOneRotated.Y) + "," + 
+                                        (position.X + massTwoRotated.X) + "," + (position.Y + massTwoRotated.Y));
+                    }
+                    //Display positions
+                    Console.WriteLine();
+                    Console.WriteLine("Angle: " + rotation);
+                    Console.WriteLine("Center Mass: " + position);
+                    Console.WriteLine("Smaller Mass: " + (massOneRotated + position));
+                    Console.WriteLine("Larger Mass: " + (massTwoRotated + position));
+
+                }
+            }
 
         }
 
