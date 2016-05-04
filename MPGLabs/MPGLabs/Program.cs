@@ -231,10 +231,8 @@ namespace MPGLabs
                     Console.WriteLine("Center Mass: " + position);
                     Console.WriteLine("Smaller Mass: " + (massOneRotated + position));
                     Console.WriteLine("Larger Mass: " + (massTwoRotated + position));
-
                 }
             }
-
         }
 
         #endregion
